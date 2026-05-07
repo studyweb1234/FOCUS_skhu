@@ -32,4 +32,3 @@ class QuickNoteAdmin(admin.ModelAdmin):
     list_display = ('title', 'user', 'subject_folder', 'created_at', 'updated_at')
     list_filter = ('subject_folder', 'created_at')
     search_fields = ('user__username', 'title', 'content')
-
