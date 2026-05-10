@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}과제 관리 - FOCUS{% endblock %} [cite: 1]
+{% block title %}과제 관리 - FOCUS{% endblock %}
 
 {% block favicon %}
 <link rel="icon"
@@ -88,21 +88,21 @@
 <div class="fade-in">
     <div class="page-header flex-between">
         <div>
-            <h1 class="page-title"><i class="mdi mdi-clipboard-text-outline"></i> 과제 관리</h1> [cite: 1]
+            <h1 class="page-title"><i class="mdi mdi-clipboard-text-outline"></i> 과제 관리</h1>
             <p class="page-subtitle" style="margin-bottom: 0.5rem;" data-dynamic-greeting="assignments">{{ greeting }}</p>
-            <p class="page-subtitle" style="color: var(--text-tertiary); font-size: 0.9rem;">칸반 보드로 마감 기한을 관리하세요</p> [cite: 1]
+            <p class="page-subtitle" style="color: var(--text-tertiary); font-size: 0.9rem;">과제를 해결할 시간입니다! 칸반 보드로 마감 기한을 관리하세요.</p>
         </div>
         <div class="header-actions">
             <div class="stats-badges">
                 <div class="stat-badge stat-pending">
                     <i class="mdi mdi-clock-outline"></i>
                     <span id="pendingCount">{{ pending_assignments|length }}</span>
-                    <span>대기 중</span> [cite: 1]
+                    <span>대기 중</span>
                 </div>
             </div>
             <button id="addAssignmentBtn" class="btn-add-assignment">
                 <i class="mdi mdi-plus"></i>
-                <span>새 과제</span> [cite: 1]
+                <span>새 과제</span>
             </button>
         </div>
     </div>
@@ -112,7 +112,7 @@
             <div class="kanban-column-header">
                 <div class="kanban-column-title">
                     <i class="mdi mdi-clipboard-list-outline"></i>
-                    <span>할 일</span> [cite: 1]
+                    <span>할 일</span>
                 </div>
                 <span class="kanban-column-count" id="todoCount">0</span>
             </div>
@@ -123,7 +123,7 @@
             <div class="kanban-column-header">
                 <div class="kanban-column-title">
                     <i class="mdi mdi-progress-clock"></i>
-                    <span>진행 중</span> [cite: 1]
+                    <span>진행 중</span>
                 </div>
                 <span class="kanban-column-count" id="inProgressCount">0</span>
             </div>
@@ -134,14 +134,14 @@
             <div class="kanban-column-header">
                 <div class="kanban-column-title">
                     <i class="mdi mdi-check-circle"></i>
-                    <span>최근 완료</span> [cite: 1]
+                    <span>최근 완료</span>
                 </div>
                 <span class="kanban-column-count" id="completedCount">{{ completed_assignments|length }}</span>
             </div>
             <div class="kanban-column-body" id="completedColumn" data-status="completed">
                 {% for assignment in completed_assignments %}
                 <div class="completed-cube" data-id="{{ assignment.id }}">
-                    <button class="delete-btn" onclick="deleteCompletedAssignment({{ assignment.id }}, this)" title="삭제"> [cite: 1]
+                    <button class="delete-btn" onclick="deleteCompletedAssignment({{ assignment.id }}, this)" title="삭제">
                         <i class="mdi mdi-delete-outline"></i>
                     </button>
                     <div class="assignment-title">{{ assignment.title }}</div>
@@ -154,11 +154,11 @@
                 {% empty %}
                 <div class="kanban-empty" id="completedEmpty">
                     <i class="mdi mdi-checkbox-marked-circle-outline"></i>
-                    <p>완료된 과제가 아직 없습니다</p> [cite: 1]
+                    <p>완료된 과제가 아직 없습니다</p>
                 </div>
                 {% endfor %}
                 <button id="seeMoreBtn" style="display: none;">
-                    <i class="mdi mdi-chevron-down"></i> 더 보기 [cite: 1]
+                    <i class="mdi mdi-chevron-down"></i> 더 보기
                 </button>
             </div>
         </div>
@@ -168,55 +168,44 @@
 <div class="modal-overlay" id="addModal">
     <div class="modal notion-modal">
         <button class="modal-close" id="closeModalBtn">&times;</button>
-        <input type="text" id="assignmentTitle" class="notion-title-input" placeholder="제목 없는 과제" required> [cite: 1]
+        <input type="text" id="assignmentTitle" class="notion-title-input" placeholder="제목 없는 과제" required>
+        
         <div class="notion-properties">
             <div class="notion-property-row">
-                <div class="notion-property-label">
-                    <i class="mdi mdi-flag-outline"></i>
-                    <span>우선순위</span> [cite: 1]
-                </div>
+                <div class="notion-property-label"><i class="mdi mdi-flag-outline"></i><span>우선순위</span></div>
                 <div class="notion-property-value">
                     <select id="assignmentPriority" class="notion-select">
-                        <option value="low">낮음</option> [cite: 1]
-                        <option value="normal" selected>보통</option> [cite: 1]
-                        <option value="high">높음</option> [cite: 1]
+                        <option value="low">낮음</option>
+                        <option value="normal" selected>보통</option>
+                        <option value="high">높음</option>
                     </select>
                 </div>
             </div>
 
             <div class="notion-property-row">
-                <div class="notion-property-label">
-                    <i class="mdi mdi-checkbox-marked-circle-outline"></i>
-                    <span>상태</span> [cite: 1]
-                </div>
+                <div class="notion-property-label"><i class="mdi mdi-checkbox-marked-circle-outline"></i><span>상태</span></div>
                 <div class="notion-property-value">
                     <select id="assignmentStatus" class="notion-select notion-status-select">
-                        <option value="todo">할 일</option> [cite: 1]
-                        <option value="in_progress">진행 중</option> [cite: 1]
+                        <option value="todo">할 일</option>
+                        <option value="in_progress">진행 중</option>
                     </select>
                 </div>
             </div>
 
             <div class="notion-property-row notion-notes-row">
-                <div class="notion-property-label">
-                    <i class="mdi mdi-text"></i>
-                    <span>메모</span> [cite: 1]
-                </div>
+                <div class="notion-property-label"><i class="mdi mdi-text"></i><span>메모</span></div>
                 <div class="notion-property-value">
-                    <textarea id="assignmentDescription" class="notion-textarea" placeholder="메모 추가..."></textarea> [cite: 1]
+                    <textarea id="assignmentDescription" class="notion-textarea" placeholder="메모 추가..."></textarea>
                 </div>
             </div>
 
             <div class="notion-property-row">
-                <div class="notion-property-label">
-                    <i class="mdi mdi-calendar-outline"></i>
-                    <span>마감 기한</span> [cite: 1]
-                </div>
+                <div class="notion-property-label"><i class="mdi mdi-calendar-outline"></i><span>마감 기한</span></div>
                 <div class="notion-property-value">
                     <div class="notion-date-wrapper">
                         <input type="date" id="assignmentDeadline" class="notion-date-input">
                         <input type="time" id="assignmentTime" class="notion-time-input" value="23:59">
-                        <button type="button" class="notion-clear-date" id="clearDeadlineBtn" title="기한 삭제"> [cite: 1]
+                        <button type="button" class="notion-clear-date" id="clearDeadlineBtn" title="기한 삭제">
                             <i class="mdi mdi-close"></i>
                         </button>
                     </div>
@@ -225,18 +214,18 @@
         </div>
 
         <div class="notion-quick-options">
-            <button type="button" class="notion-quick-btn" data-days="0">오늘</button> [cite: 1]
-            <button type="button" class="notion-quick-btn" data-days="1">내일</button> [cite: 1]
-            <button type="button" class="notion-quick-btn" data-days="7">다음 주</button> [cite: 1]
-            <button type="button" class="notion-quick-btn notion-no-deadline" data-no-deadline="true">기한 없음</button> [cite: 1]
+            <button type="button" class="notion-quick-btn" data-days="0">오늘</button>
+            <button type="button" class="notion-quick-btn" data-days="1">내일</button>
+            <button type="button" class="notion-quick-btn" data-days="7">다음 주</button>
+            <button type="button" class="notion-quick-btn notion-no-deadline" data-no-deadline="true">기한 없음</button>
         </div>
 
         <div class="notion-modal-actions">
             <button type="button" id="deleteAssignmentBtn" class="notion-delete-btn" style="display: none;">
-                <i class="mdi mdi-trash-can-outline"></i> 삭제 [cite: 1]
+                <i class="mdi mdi-trash-can-outline"></i> 삭제
             </button>
             <button type="button" id="saveAssignmentBtn" class="notion-save-btn">
-                <i class="mdi mdi-check"></i> <span id="saveButtonText">과제 추가</span> [cite: 1]
+                <i class="mdi mdi-check"></i> <span id="saveButtonText">과제 추가</span>
             </button>
         </div>
     </div>
@@ -245,6 +234,7 @@
 
 {% block extra_js %}
 <script>
+    // 자바스크립트 로직 원본 유지 및 한글 텍스트 수정
     let assignments = {{ assignments_json|safe }};
     const todoColumn = document.getElementById('todoColumn');
     const inProgressColumn = document.getElementById('inProgressColumn');
@@ -270,7 +260,7 @@
         document.getElementById('assignmentStatus').value = 'todo';
         dateInput.value = '';
         timeInput.value = '23:59';
-        document.getElementById('saveButtonText').textContent = '과제 추가'; [cite: 1]
+        document.getElementById('saveButtonText').textContent = '과제 추가';
         deleteBtn.style.display = 'none';
         dateInput.style.display = 'none';
         timeInput.style.display = 'none';
@@ -298,7 +288,7 @@
             dateInput.style.display = 'none';
             timeInput.style.display = 'none';
         }
-        document.getElementById('saveButtonText').textContent = '변경 사항 저장'; [cite: 1]
+        document.getElementById('saveButtonText').textContent = '변경 사항 저장';
         deleteBtn.style.display = 'flex';
         addModal.classList.add('active');
     }
@@ -336,7 +326,7 @@
 
     saveBtn.addEventListener('click', async () => {
         const title = document.getElementById('assignmentTitle').value.trim();
-        if (!title) { alert('과제 제목을 입력해 주세요.'); return; } [cite: 1]
+        if (!title) { alert('과제 제목을 입력해 주세요.'); return; }
 
         const deadline = dateInput.value ? `${dateInput.value}T${timeInput.value}` : null;
         const formData = {
@@ -355,10 +345,8 @@
                 body: JSON.stringify(formData)
             });
             const data = await response.json();
-            if (data.success) {
-                location.reload();
-            } else { alert('오류가 발생했습니다: ' + data.error); } [cite: 1]
-        } catch (e) { alert('과제 저장 중 오류가 발생했습니다.'); } [cite: 1]
+            if (data.success) { location.reload(); } else { alert('오류가 발생했습니다: ' + data.error); }
+        } catch (e) { alert('과제 저장 중 오류가 발생했습니다.'); }
     });
 
     function renderKanban() {
@@ -368,13 +356,13 @@
         const progressList = assignments.filter(a => a.status === 'in_progress');
 
         if (todoList.length === 0) {
-            todoColumn.innerHTML = '<div class="kanban-empty"><i class="mdi mdi-clipboard-check-outline"></i><p>할 일이 없습니다</p></div>'; [cite: 1]
+            todoColumn.innerHTML = '<div class="kanban-empty"><i class="mdi mdi-clipboard-check-outline"></i><p>할 일이 없습니다</p></div>';
         } else {
             todoList.forEach((a, i) => todoColumn.appendChild(createAssignmentCube(a, i, 'todo')));
         }
 
         if (progressList.length === 0) {
-            inProgressColumn.innerHTML = '<div class="kanban-empty"><i class="mdi mdi-progress-clock"></i><p>진행 중인 과제가 없습니다</p></div>'; [cite: 1]
+            inProgressColumn.innerHTML = '<div class="kanban-empty"><i class="mdi mdi-progress-clock"></i><p>진행 중인 과제가 없습니다</p></div>';
         } else {
             progressList.forEach((a, i) => inProgressColumn.appendChild(createAssignmentCube(a, i, 'in_progress')));
         }
@@ -387,8 +375,8 @@
         cube.className = `assignment-cube ${getUrgencyClass(hours)}`;
         cube.onclick = () => openEditModal(a);
         
-        const priorityLabels = { 'low': '낮음', 'normal': '보통', 'high': '높음' }; [cite: 1]
-        const nextAction = status === 'todo' ? '진행 중으로 이동' : '완료로 표시'; [cite: 1]
+        const priorityLabels = { 'low': '낮음', 'normal': '보통', 'high': '높음' };
+        const nextAction = status === 'todo' ? '진행 중으로 이동' : '완료로 표시';
         const nextIcon = status === 'todo' ? 'mdi-arrow-right' : 'mdi-check';
 
         cube.innerHTML = `
@@ -404,7 +392,7 @@
                 <div class="time-container">
                     <div class="time-info">
                         <div class="time-remaining-large">${formatHoursRemainingShort(hours)}</div>
-                        <div class="time-label">${hours === null ? '' : (hours < 0 ? '기한 지남' : '남음')}</div> [cite: 1]
+                        <div class="time-label">${hours === null ? '' : (hours < 0 ? '기한 지남' : '남음')}</div>
                     </div>
                     <button class="move-btn" onclick="event.stopPropagation(); moveAssignment(${a.id}, '${status === 'todo' ? 'in_progress' : 'completed'}')" title="${nextAction}">
                         <i class="mdi ${nextIcon}"></i>
@@ -421,17 +409,17 @@
     }
 
     function formatHoursRemainingShort(h) {
-        if (h === null) return "기한 없음"; [cite: 1]
-        if (h < 0) return "지연"; [cite: 1]
-        if (h < 1) return Math.round(h * 60) + "분"; [cite: 1]
-        if (h < 24) return Math.floor(h) + "시간"; [cite: 1]
-        return Math.floor(h / 24) + "일"; [cite: 1]
+        if (h === null) return "기한 없음";
+        if (h < 0) return "지연";
+        if (h < 1) return Math.round(h * 60) + "분";
+        if (h < 24) return Math.floor(h) + "시간";
+        return Math.floor(h / 24) + "일";
     }
 
     function formatDate(d) {
-        if (!d) return '기한이 설정되지 않음'; [cite: 1]
+        if (!d) return '기한이 설정되지 않음';
         const date = new Date(d);
-        return date.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' }) + ' ' + date.toLocaleTimeString('ko-KR', { hour: 'numeric', minute: '2-digit' }); [cite: 1]
+        return date.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' }) + ' ' + date.toLocaleTimeString('ko-KR', { hour: 'numeric', minute: '2-digit' });
     }
 
     function getUrgencyClass(h) {
@@ -457,7 +445,7 @@
     }
 
     async function deleteAssignment(id) {
-        if (!confirm('과제를 삭제하시겠습니까?')) return; [cite: 1]
+        if (!confirm('과제를 삭제하시겠습니까?')) return;
         const response = await fetch(`/api/assignment/delete/${id}/`, {
             method: 'POST',
             headers: { 'X-CSRFToken': csrf }
@@ -466,7 +454,7 @@
     }
 
     async function deleteCompletedAssignment(id) {
-        if (!confirm('완료된 과제 기록을 삭제하시겠습니까?')) return; [cite: 1]
+        if (!confirm('완료된 과제 기록을 삭제하시겠습니까?')) return;
         deleteAssignment(id);
     }
 
