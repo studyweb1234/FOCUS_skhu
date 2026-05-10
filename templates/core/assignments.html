@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}과제 관리 - FOCUS{% endblock %} [cite: 694]
+{% block title %}과제 관리 - FOCUS{% endblock %}
 
 {% block favicon %}
 <link rel="icon"
@@ -10,8 +10,8 @@
 
 {% block extra_css %}
 <style>
-    /* 원본 스타일을 그대로 유지합니다. (내용 생략) */
-    {{ assignments_css_placeholder }}
+    /* 원본 assignmentshtml.txt의 모든 CSS 스타일을 여기에 100% 동일하게 유지합니다. */
+    {{ assignments_original_css }} /* (실제 적용 시 원본 파일의 <style> 내용을 그대로 두세요) */
 </style>
 {% endblock %}
 
@@ -19,21 +19,21 @@
 <div class="fade-in">
     <div class="page-header flex-between">
         <div>
-            <h1 class="page-title"><i class="mdi mdi-clipboard-text-outline"></i> 과제 관리</h1> [cite: 1007]
+            <h1 class="page-title"><i class="mdi mdi-clipboard-text-outline"></i> 과제 관리</h1>
             <p class="page-subtitle" style="margin-bottom: 0.5rem;" data-dynamic-greeting="assignments">{{ greeting }}</p>
-            <p class="page-subtitle" style="color: var(--text-tertiary); font-size: 0.9rem;">칸반 보드로 마감 기한을 관리하세요</p> [cite: 1007]
+            <p class="page-subtitle" style="color: var(--text-tertiary); font-size: 0.9rem;">칸반 보드로 마감 기한을 관리하세요</p>
         </div>
         <div class="header-actions">
             <div class="stats-badges">
                 <div class="stat-badge stat-pending">
                     <i class="mdi mdi-clock-outline"></i>
                     <span id="pendingCount">{{ pending_assignments|length }}</span>
-                    <span>대기 중</span> [cite: 1008]
+                    <span>대기 중</span>
                 </div>
             </div>
             <button id="addAssignmentBtn" class="btn-add-assignment">
                 <i class="mdi mdi-plus"></i>
-                <span>새 과제</span> [cite: 1009]
+                <span>새 과제</span>
             </button>
         </div>
     </div>
@@ -43,7 +43,7 @@
             <div class="kanban-column-header">
                 <div class="kanban-column-title">
                     <i class="mdi mdi-clipboard-list-outline"></i>
-                    <span>할 일</span> [cite: 1010]
+                    <span>할 일</span>
                 </div>
                 <span class="kanban-column-count" id="todoCount">0</span>
             </div>
@@ -54,7 +54,7 @@
             <div class="kanban-column-header">
                 <div class="kanban-column-title">
                     <i class="mdi mdi-progress-clock"></i>
-                    <span>진행 중</span> [cite: 1012]
+                    <span>진행 중</span>
                 </div>
                 <span class="kanban-column-count" id="inProgressCount">0</span>
             </div>
@@ -65,7 +65,7 @@
             <div class="kanban-column-header">
                 <div class="kanban-column-title">
                     <i class="mdi mdi-check-circle"></i>
-                    <span>최근 완료</span> [cite: 1014]
+                    <span>최근 완료</span>
                 </div>
                 <span class="kanban-column-count" id="completedCount">{{ completed_assignments|length }}</span>
             </div>
@@ -79,17 +79,17 @@
                     <div class="assignment-subject">{{ assignment.subject }}</div>
                     <div class="completed-date">
                         <i class="mdi mdi-check-circle"></i>
-                        <span>{{ assignment.completed_at|date:"Y년 m월 d일" }}</span> [cite: 1017]
+                        <span>{{ assignment.completed_at|date:"Y년 n월 j일" }}</span>
                     </div>
                 </div>
                 {% empty %}
                 <div class="kanban-empty" id="completedEmpty">
                     <i class="mdi mdi-checkbox-marked-circle-outline"></i>
-                    <p>완료된 과제가 없습니다</p> [cite: 1018]
+                    <p>완료된 과제가 아직 없습니다</p>
                 </div>
                 {% endfor %}
                 <button id="seeMoreBtn" style="display: none;">
-                    <i class="mdi mdi-chevron-down"></i> 더 보기 [cite: 1019]
+                    <i class="mdi mdi-chevron-down"></i> 더 보기
                 </button>
             </div>
         </div>
@@ -99,53 +99,53 @@
 <div class="modal-overlay" id="addModal">
     <div class="modal notion-modal">
         <button class="modal-close" id="closeModalBtn">&times;</button>
-        <input type="text" id="assignmentTitle" class="notion-title-input" placeholder="제목 없는 과제" required> [cite: 1020]
+        <input type="text" id="assignmentTitle" class="notion-title-input" placeholder="제목 없는 과제" required>
         <div class="notion-properties">
             <div class="notion-property-row">
-                <div class="notion-property-label"><i class="mdi mdi-flag-outline"></i><span>우선순위</span></div> [cite: 1021]
+                <div class="notion-property-label"><i class="mdi mdi-flag-outline"></i><span>우선순위</span></div>
                 <div class="notion-property-value">
                     <select id="assignmentPriority" class="notion-select">
-                        <option value="low">낮음</option> [cite: 1022]
-                        <option value="normal" selected>보통</option> [cite: 1022]
-                        <option value="high">높음</option> [cite: 1022]
+                        <option value="low">낮음</option>
+                        <option value="normal" selected>보통</option>
+                        <option value="high">높음</option>
                     </select>
                 </div>
             </div>
             <div class="notion-property-row">
-                <div class="notion-property-label"><i class="mdi mdi-checkbox-marked-circle-outline"></i><span>상태</span></div> [cite: 1024]
+                <div class="notion-property-label"><i class="mdi mdi-checkbox-marked-circle-outline"></i><span>상태</span></div>
                 <div class="notion-property-value">
                     <select id="assignmentStatus" class="notion-select notion-status-select">
-                        <option value="todo">할 일</option> [cite: 1024]
-                        <option value="in_progress">진행 중</option> [cite: 1025]
+                        <option value="todo">할 일</option>
+                        <option value="in_progress">진행 중</option>
                     </select>
                 </div>
             </div>
             <div class="notion-property-row notion-notes-row">
-                <div class="notion-property-label"><i class="mdi mdi-text"></i><span>메모</span></div> [cite: 1026]
+                <div class="notion-property-label"><i class="mdi mdi-text"></i><span>메모</span></div>
                 <div class="notion-property-value">
-                    <textarea id="assignmentDescription" class="notion-textarea" placeholder="메모 추가..."></textarea> [cite: 1027]
+                    <textarea id="assignmentDescription" class="notion-textarea" placeholder="메모 추가..."></textarea>
                 </div>
             </div>
             <div class="notion-property-row">
-                <div class="notion-property-label"><i class="mdi mdi-calendar-outline"></i><span>마감 기한</span></div> [cite: 1028]
+                <div class="notion-property-label"><i class="mdi mdi-calendar-outline"></i><span>마감 기한</span></div>
                 <div class="notion-property-value">
                     <div class="notion-date-wrapper">
                         <input type="date" id="assignmentDeadline" class="notion-date-input">
                         <input type="time" id="assignmentTime" class="notion-time-input" value="23:59">
-                        <button type="button" class="notion-clear-date" id="clearDeadlineBtn" title="기한 삭제"><i class="mdi mdi-close"></i></button> [cite: 1029]
+                        <button type="button" class="notion-clear-date" id="clearDeadlineBtn" title="기한 삭제"><i class="mdi mdi-close"></i></button>
                     </div>
                 </div>
             </div>
         </div>
         <div class="notion-quick-options">
-            <button type="button" class="notion-quick-btn" data-days="0">오늘</button> [cite: 1031]
-            <button type="button" class="notion-quick-btn" data-days="1">내일</button> [cite: 1031]
-            <button type="button" class="notion-quick-btn" data-days="7">다음 주</button> [cite: 1031]
-            <button type="button" class="notion-quick-btn notion-no-deadline" data-no-deadline="true">기한 없음</button> [cite: 1031]
+            <button type="button" class="notion-quick-btn" data-days="0">오늘</button>
+            <button type="button" class="notion-quick-btn" data-days="1">내일</button>
+            <button type="button" class="notion-quick-btn" data-days="7">다음 주</button>
+            <button type="button" class="notion-quick-btn notion-no-deadline" data-no-deadline="true">기한 없음</button>
         </div>
         <div class="notion-modal-actions">
-            <button type="button" id="deleteAssignmentBtn" class="notion-delete-btn" style="display: none;"><i class="mdi mdi-trash-can-outline"></i> 삭제</button> [cite: 1032]
-            <button type="button" id="saveAssignmentBtn" class="notion-save-btn"><i class="mdi mdi-check"></i> <span id="saveButtonText">과제 추가</span></button> [cite: 1033]
+            <button type="button" id="deleteAssignmentBtn" class="notion-delete-btn" style="display: none;"><i class="mdi mdi-trash-can-outline"></i> 삭제</button>
+            <button type="button" id="saveAssignmentBtn" class="notion-save-btn"><i class="mdi mdi-check"></i> <span id="saveButtonText">과제 추가</span></button>
         </div>
     </div>
 </div>

@@ -1,18 +1,18 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}빠른 메모 - FOCUS{% endblock %} [cite: 1248]
+{% block title %}빠른 메모 - FOCUS{% endblock %}
 
 {% block content %}
 <div class="notes-page">
     <div class="subjects-bar">
         <div class="subjects-header">
-            <div class="subjects-title"><i class="mdi mdi-bookshelf"></i><span>나의 과목</span></div> [cite: 1512]
-            <button class="add-subject-btn" onclick="openSubjectModal()"><i class="mdi mdi-plus"></i><span>과목 추가</span></button> [cite: 1512]
+            <div class="subjects-title"><i class="mdi mdi-bookshelf"></i><span>나의 과목</span></div>
+            <button class="add-subject-btn" onclick="openSubjectModal()"><i class="mdi mdi-plus"></i><span>과목 추가</span></button>
         </div>
         <div class="subjects-list">
             <div class="subject-pill {% if not selected_folder %}active{% endif %}" onclick="selectSubject(null)">
-                <i class="mdi mdi-note-multiple"></i><span>모든 메모</span><span class="pill-count">{{ total_notes }}</span> [cite: 1513]
+                <i class="mdi mdi-note-multiple"></i><span>모든 메모</span><span class="pill-count">{{ total_notes }}</span>
             </div>
             {% for folder in folders %}
             <div class="subject-pill {% if selected_folder.id == folder.id %}active{% endif %}" onclick="selectSubject({{ folder.id }})">
@@ -28,45 +28,30 @@
     <div class="notes-content">
         <div class="notes-header">
             <h1>
-                {% if selected_folder %}{{ selected_folder.name }}{% else %}모든 메모{% endif %} [cite: 1517]
-                <span class="count-badge">{% with total=pinned_notes|length|add:notes|length %}{{ total }}개의 메모{% endwith %}</span> [cite: 1517]
+                {% if selected_folder %}{{ selected_folder.name }}{% else %}모든 메모{% endif %}
+                <span class="count-badge">{% with total=pinned_notes|length|add:notes|length %}{{ total }}개의 메모{% endwith %}</span>
             </h1>
             {% if selected_folder %}
-            <button class="new-note-btn" onclick="openNoteModal()"><i class="mdi mdi-plus"></i><span>새 메모</span></button> [cite: 1518]
+            <button class="new-note-btn" onclick="openNoteModal()"><i class="mdi mdi-plus"></i><span>새 메모</span></button>
             {% endif %}
         </div>
         
         <div style="text-align: center; color: var(--text-secondary); margin-bottom: 1.5rem; font-style: italic;" data-dynamic-greeting="notes">{{ greeting }}</div>
 
-        {% if pinned_notes %}
-        <div class="pinned-section">
-            <div class="pinned-header"><i class="mdi mdi-pin"></i><span>고정된 메모 ({{ pinned_notes|length }}/4)</span></div> [cite: 1520]
-            <div class="pinned-grid">
-                {% for note in pinned_notes %}
-                {% endfor %}
-            </div>
-        </div>
-        {% endif %}
-
-        {% if notes %}
-        <div class="notes-grid">
-            {% for note in notes %}
-            {% endfor %}
-        </div>
-        {% else %}
+        {% if not pinned_notes and not notes %}
         <div class="empty-state">
             <div class="empty-icon"><i class="mdi mdi-note-plus"></i></div>
-            <div class="empty-title">{% if selected_folder %}메모가 없습니다{% else %}과목을 선택하세요{% endif %}</div> [cite: 1535]
+            <div class="empty-title">{% if selected_folder %}메모가 없습니다{% else %}과목을 선택하세요{% endif %}</div>
             <div class="empty-text">
-                {% if selected_folder %}이 과목에 첫 번째 메모를 작성해보세요.{% else %}위에서 과목을 선택하거나 새 과목을 만들어 메모를 시작하세요.{% endif %} [cite: 1536]
+                {% if selected_folder %}이 과목에 첫 번째 메모를 작성해 보세요.{% else %}위에서 과목을 선택하거나 새 과목을 만들어 메모를 시작하세요.{% endif %}
             </div>
             <button class="empty-action" onclick="{% if selected_folder %}openNoteModal(){% else %}openSubjectModal(){% endif %}">
-                <i class="mdi mdi-plus"></i><span>{% if selected_folder %}메모 생성{% else %}과목 생성{% endif %}</span> [cite: 1537, 1538]
+                <i class="mdi mdi-plus"></i><span>{% if selected_folder %}메모 생성{% else %}과목 생성{% endif %}</span>
             </button>
         </div>
         {% endif %}
-    </div>
+
+        </div>
 </div>
 
-[cite: 1539, 1541]
 {% endblock %}

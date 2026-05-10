@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}고객 지원 - FOCUS{% endblock %} [cite: 1609]
+{% block title %}고객 지원 - FOCUS{% endblock %}
 
 {% block content %}
 <div class="chat-container fade-in">
@@ -9,29 +9,30 @@
         <div class="chat-header-info">
             <div class="chat-avatar"><i class="mdi mdi-shield-account"></i></div>
             <div class="chat-title">
-                <h1>지원 팀</h1> [cite: 1610]
+                <h1>지원 팀</h1>
                 <span class="chat-status">
                     {% if pending_count > 0 %}
-                    {{ pending_count }}개 대기 중 · {{ resolved_count|default:"0" }}개 해결됨 [cite: 1610]
+                    {{ pending_count }}개 대기 중 · {{ resolved_count|default:"0" }}개 해결됨
                     {% else %}
-                    보통 24시간 이내에 답변해 드립니다. [cite: 1611]
+                    보통 24시간 이내에 답변해 드립니다.
                     {% endif %}
                 </span>
             </div>
         </div>
-        <div class="chat-header-stats"><span class="stat-badge">{{ support_messages|length|default:"0" }}개의 메시지</span></div> [cite: 1612]
+        <div class="chat-header-stats">
+            <span class="stat-badge">{{ support_messages|length|default:"0" }}개의 메시지</span>
+        </div>
     </div>
 
     <div class="chat-messages" id="chatMessages">
         {% if support_messages %}
             {% for msg in support_messages reversed %}
-                [cite: 1614, 1615]
-            {% endfor %}
+                {% endfor %}
         {% else %}
         <div class="chat-empty">
             <div class="empty-icon"><i class="mdi mdi-message-text-outline"></i></div>
-            <p>메시지가 없습니다</p> [cite: 1627]
-            <span>지원 팀과 대화를 시작해 보세요.</span> [cite: 1627]
+            <p>메시지가 아직 없습니다</p>
+            <span>지원 팀과 대화를 시작해 보세요.</span>
         </div>
         {% endif %}
     </div>
@@ -39,13 +40,13 @@
     <div class="chat-input-area">
         <form id="supportForm" class="chat-form">
             <div class="type-pills">
-                <label class="type-pill"><input type="radio" name="message_type" value="feedback" checked><span><i class="mdi mdi-lightbulb-outline"></i> 피드백</span></label> [cite: 1633]
-                <label class="type-pill"><input type="radio" name="message_type" value="time_correction"><span><i class="mdi mdi-clock-edit-outline"></i> 시간 수정</span></label> [cite: 1634]
-                <label class="type-pill"><input type="radio" name="message_type" value="bug_report"><span><i class="mdi mdi-bug-outline"></i> 버그 제보</span></label> [cite: 1635]
+                <label class="type-pill"><input type="radio" name="message_type" value="feedback" checked><span><i class="mdi mdi-lightbulb-outline"></i> 피드백</span></label>
+                <label class="type-pill"><input type="radio" name="message_type" value="time_correction"><span><i class="mdi mdi-clock-edit-outline"></i> 시간 수정</span></label>
+                <label class="type-pill"><input type="radio" name="message_type" value="bug_report"><span><i class="mdi mdi-bug-outline"></i> 버그 제보</span></label>
             </div>
             <div class="input-row">
                 <div class="message-input-wrap">
-                    <textarea id="messageContent" class="message-input" placeholder="메시지를 입력하세요..." rows="1"></textarea> [cite: 1637]
+                    <textarea id="messageContent" class="message-input" placeholder="메시지를 입력하세요..." rows="1"></textarea>
                     <button type="submit" class="send-btn"><i class="mdi mdi-send"></i></button>
                 </div>
             </div>
