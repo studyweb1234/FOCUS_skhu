@@ -3,8 +3,594 @@
 
 {% block title %}빠른 메모 - FOCUS{% endblock %}
 
+{% block extra_css %}
+<style>
+    /* 원본 레이아웃 및 디자인(CSS) 100% 유지 */
+    .main-content {
+        padding: 0 !important;
+        max-width: 100% !important;
+        width: calc(100% - 240px) !important;
+        margin-left: 240px !important;
+    }
+    
+    @media (max-width: 768px) {
+        .main-content {
+            width: 100% !important;
+            margin-left: 0 !important;
+            padding-top: 60px !important;
+        }
+    }
+
+    .content-wrapper {
+        max-width: 100% !important;
+        width: 100% !important;
+        padding: 0 !important;
+    }
+
+    .notes-page {
+        min-height: calc(100vh - 60px);
+        background: var(--bg-primary);
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+        box-sizing: border-box;
+    }
+
+    /* 과목 바 스타일 */
+    .subjects-bar {
+        background: var(--bg-secondary);
+        border-bottom: 1px solid var(--border-color);
+        padding: 12px 24px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .subjects-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+    }
+
+    .subjects-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .add-subject-btn {
+        background: transparent;
+        border: 1.5px dashed var(--border-color);
+        color: var(--text-secondary);
+        padding: 4px 12px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .add-subject-btn:hover {
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+        background: rgba(79, 70, 229, 0.05);
+    }
+
+    .subjects-list {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .subjects-list::-webkit-scrollbar {
+        display: none;
+    }
+
+    .subject-pill {
+        flex-shrink: 0;
+        padding: 8px 16px;
+        border-radius: 50px;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-color);
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+    }
+
+    .subject-pill:hover {
+        border-color: var(--text-tertiary);
+        color: var(--text-primary);
+    }
+
+    .subject-pill.active {
+        background: var(--color-primary);
+        border-color: var(--color-primary);
+        color: white;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+    }
+
+    .pill-count {
+        font-size: 0.7rem;
+        opacity: 0.7;
+        background: rgba(0, 0, 0, 0.1);
+        padding: 2px 6px;
+        border-radius: 10px;
+    }
+
+    .subject-pill.active .pill-count {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .subject-pill .delete-btn {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        opacity: 0;
+        transition: opacity 0.2s;
+        margin-left: -4px;
+    }
+
+    .subject-pill:hover .delete-btn {
+        opacity: 0.7;
+    }
+
+    .subject-pill .delete-btn:hover {
+        opacity: 1;
+        background: rgba(239, 68, 68, 0.2);
+        color: #ef4444;
+    }
+
+    /* 메인 콘텐츠 영역 */
+    .notes-content {
+        padding: 32px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .notes-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 32px;
+    }
+
+    .notes-header h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .count-badge {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--text-tertiary);
+        background: var(--bg-tertiary);
+        padding: 4px 12px;
+        border-radius: 50px;
+    }
+
+    .new-note-btn {
+        background: var(--color-primary);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+    }
+
+    .new-note-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(79, 70, 229, 0.3);
+    }
+
+    .notes-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+    }
+
+    .note-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 20px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        min-height: 180px;
+    }
+
+    .note-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--border-color-light);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .note-pin {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        color: var(--text-tertiary);
+        transition: all 0.2s;
+        padding: 4px;
+        border-radius: 6px;
+    }
+
+    .note-pin:hover {
+        background: var(--bg-tertiary);
+        color: var(--color-primary);
+    }
+
+    .note-pin.active {
+        color: var(--color-primary);
+    }
+
+    .note-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-right: 24px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .note-preview {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        line-height: 1.5;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        flex-grow: 1;
+    }
+
+    .note-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 12px;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .note-date {
+        font-size: 0.75rem;
+        color: var(--text-tertiary);
+    }
+
+    .note-folder {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--color-primary);
+        background: rgba(79, 70, 229, 0.1);
+        padding: 2px 8px;
+        border-radius: 4px;
+    }
+
+    .pinned-section {
+        margin-bottom: 40px;
+    }
+
+    .pinned-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--color-primary);
+        margin-bottom: 16px;
+    }
+
+    .pinned-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+    }
+
+    .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 80px 24px;
+        text-align: center;
+    }
+
+    .empty-icon {
+        font-size: 4rem;
+        color: var(--text-tertiary);
+        opacity: 0.3;
+        margin-bottom: 24px;
+    }
+
+    .empty-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 12px;
+    }
+
+    .empty-text {
+        font-size: 1rem;
+        color: var(--text-secondary);
+        max-width: 400px;
+        margin-bottom: 32px;
+        line-height: 1.6;
+    }
+
+    .empty-action {
+        background: var(--color-primary);
+        color: white;
+        border: none;
+        padding: 12px 28px;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .empty-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+    }
+
+    /* 모달 스타일 */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(4px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        padding: 20px;
+    }
+
+    .modal-overlay.active {
+        display: flex;
+    }
+
+    .notion-modal {
+        background: var(--bg-secondary);
+        width: 100%;
+        max-width: 600px;
+        border-radius: 16px;
+        border: 1px solid var(--border-color);
+        overflow: hidden;
+        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.3);
+        animation: modalIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+    }
+
+    @keyframes modalIn {
+        from {
+            opacity: 0;
+            transform: scale(0.95) translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    }
+
+    .modal-header {
+        padding: 24px 32px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .modal-close {
+        background: transparent;
+        border: none;
+        color: var(--text-tertiary);
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+
+    .modal-close:hover {
+        color: var(--text-primary);
+    }
+
+    .modal-body {
+        padding: 0 32px 32px;
+    }
+
+    .form-group {
+        margin-bottom: 24px;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        margin-bottom: 8px;
+    }
+
+    .title-input {
+        width: 100%;
+        background: transparent;
+        border: none;
+        border-bottom: 2px solid var(--border-color);
+        color: var(--text-primary);
+        font-size: 1.75rem;
+        font-weight: 700;
+        padding: 12px 0;
+        margin-bottom: 24px;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+
+    .title-input:focus {
+        border-color: var(--color-primary);
+    }
+
+    .content-area {
+        width: 100%;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        color: var(--text-primary);
+        font-size: 1rem;
+        line-height: 1.6;
+        padding: 16px;
+        min-height: 300px;
+        outline: none;
+        resize: none;
+        transition: border-color 0.2s;
+    }
+
+    .content-area:focus {
+        border-color: var(--color-primary);
+    }
+
+    .modal-footer {
+        padding: 16px 32px;
+        background: var(--bg-tertiary);
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+    }
+
+    .cancel-btn {
+        background: transparent;
+        border: 1px solid var(--border-color);
+        color: var(--text-secondary);
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .save-btn {
+        background: var(--color-primary);
+        color: white;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .subject-modal {
+        max-width: 400px;
+    }
+
+    .subject-input {
+        width: 100%;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        color: var(--text-primary);
+        padding: 12px 16px;
+        font-size: 1rem;
+        outline: none;
+    }
+
+    .subject-input:focus {
+        border-color: var(--color-primary);
+    }
+
+    .view-modal {
+        max-width: 800px;
+    }
+
+    .view-content-body {
+        padding: 32px;
+        min-height: 400px;
+        max-height: 60vh;
+        overflow-y: auto;
+        color: var(--text-primary);
+        line-height: 1.8;
+        font-size: 1.1rem;
+        white-space: pre-wrap;
+    }
+
+    .view-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .action-icon-btn {
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-color);
+        color: var(--text-secondary);
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .action-icon-btn:hover {
+        background: var(--bg-secondary);
+        color: var(--color-primary);
+        border-color: var(--color-primary);
+    }
+
+    .delete-action-btn:hover {
+        color: #ef4444;
+        border-color: #ef4444;
+    }
+
+    .edit-mode-footer {
+        display: none;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="notes-page">
+<div class="notes-page fade-in">
     <div class="subjects-bar">
         <div class="subjects-header">
             <div class="subjects-title"><i class="mdi mdi-bookshelf"></i><span>나의 과목</span></div>
@@ -36,22 +622,282 @@
             {% endif %}
         </div>
         
-        <div style="text-align: center; color: var(--text-secondary); margin-bottom: 1.5rem; font-style: italic;" data-dynamic-greeting="notes">{{ greeting }}</div>
+        <div style="text-align: center; color: var(--text-secondary); margin-bottom: 1.5rem; font-style: italic;">
+            나만의 학습 노트를 정리해 보세요.
+        </div>
 
-        {% if not pinned_notes and not notes %}
-        <div class="empty-state">
-            <div class="empty-icon"><i class="mdi mdi-note-plus"></i></div>
-            <div class="empty-title">{% if selected_folder %}메모가 없습니다{% else %}과목을 선택하세요{% endif %}</div>
-            <div class="empty-text">
-                {% if selected_folder %}이 과목에 첫 번째 메모를 작성해 보세요.{% else %}위에서 과목을 선택하거나 새 과목을 만들어 메모를 시작하세요.{% endif %}
+        {% if pinned_notes %}
+        <div class="pinned-section">
+            <div class="pinned-header"><i class="mdi mdi-pin"></i><span>고정된 메모 ({{ pinned_notes|length }}/4)</span></div>
+            <div class="pinned-grid">
+                {% for note in pinned_notes %}
+                <div class="note-card" onclick="viewNote({{ note.id }})">
+                    <button class="note-pin active" onclick="event.stopPropagation(); togglePin({{ note.id }})"><i class="mdi mdi-pin"></i></button>
+                    <div class="note-title">{{ note.title|default:"제목 없는 메모" }}</div>
+                    <div class="note-preview">{{ note.content }}</div>
+                    <div class="note-footer">
+                        <span class="note-date">{{ note.updated_at|date:"n월 j일" }}</span>
+                        <span class="note-folder">{{ note.folder.name }}</span>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
-            <button class="empty-action" onclick="{% if selected_folder %}openNoteModal(){% else %}openSubjectModal(){% endif %}">
-                <i class="mdi mdi-plus"></i><span>{% if selected_folder %}메모 생성{% else %}과목 생성{% endif %}</span>
-            </button>
         </div>
         {% endif %}
 
+        {% if notes %}
+        <div class="notes-grid">
+            {% for note in notes %}
+            <div class="note-card" onclick="viewNote({{ note.id }})">
+                <button class="note-pin" onclick="event.stopPropagation(); togglePin({{ note.id }})"><i class="mdi mdi-pin-outline"></i></button>
+                <div class="note-title">{{ note.title|default:"제목 없는 메모" }}</div>
+                <div class="note-preview">{{ note.content }}</div>
+                <div class="note-footer">
+                    <span class="note-date">{{ note.updated_at|date:"n월 j일" }}</span>
+                    {% if not selected_folder %}<span class="note-folder">{{ note.folder.name }}</span>{% endif %}
+                </div>
+            </div>
+            {% endfor %}
         </div>
+        {% else %}
+            {% if not pinned_notes %}
+            <div class="empty-state">
+                <div class="empty-icon"><i class="mdi mdi-note-plus"></i></div>
+                <div class="empty-title">메모할 준비가 되셨나요?</div>
+                <div class="empty-text">
+                    {% if selected_folder %}이 과목에 첫 번째 메모를 작성해 보세요.{% else %}위에서 과목을 선택하거나 새 과목을 만들어 메모를 시작해 보세요.{% endif %}
+                </div>
+                <button class="empty-action" onclick="{% if selected_folder %}openNoteModal(){% else %}openSubjectModal(){% endif %}">
+                    <i class="mdi mdi-plus"></i><span>{% if selected_folder %}메모 생성{% else %}과목 생성{% endif %}</span>
+                </button>
+            </div>
+            {% endif %}
+        {% endif %}
+    </div>
 </div>
 
+<div class="modal-overlay" id="noteModal">
+    <div class="notion-modal">
+        <div class="modal-header">
+            <h2 id="noteModalTitle">새 메모 작성</h2>
+            <button class="modal-close" onclick="closeModal('noteModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <input type="text" id="noteTitle" class="title-input" placeholder="제목 없는 메모" required>
+            <textarea id="noteContent" class="content-area" placeholder="여기에 내용을 입력하세요..."></textarea>
+        </div>
+        <div class="modal-footer">
+            <button class="cancel-btn" onclick="closeModal('noteModal')">취소</button>
+            <button class="save-btn" onclick="saveNote()">저장</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="subjectModal">
+    <div class="notion-modal subject-modal">
+        <div class="modal-header">
+            <h2>새 과목 추가</h2>
+            <button class="modal-close" onclick="closeModal('subjectModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="form-label">과목 이름</label>
+                <input type="text" id="subjectName" class="subject-input" placeholder="예: 데이터 구조, 마케팅 원론..." required>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="cancel-btn" onclick="closeModal('subjectModal')">취소</button>
+            <button class="save-btn" onclick="createSubject()">생성</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="viewModal">
+    <div class="notion-modal view-modal">
+        <div class="modal-header">
+            <div class="view-actions" id="viewModeActions">
+                <button class="action-icon-btn" onclick="enableEditMode()" title="수정"><i class="mdi mdi-pencil-outline"></i></button>
+                <button class="action-icon-btn" id="pinActionBtn" onclick="handleViewPin()" title="고정"><i class="mdi mdi-pin-outline"></i></button>
+                <button class="action-icon-btn delete-action-btn" onclick="handleViewDelete()" title="삭제"><i class="mdi mdi-delete-outline"></i></button>
+            </div>
+            <div class="view-actions" id="editModeActions" style="display: none;">
+                <button class="action-icon-btn" onclick="disableEditMode()" title="취소"><i class="mdi mdi-close"></i></button>
+                <button class="action-icon-btn" onclick="updateNote()" style="color: var(--color-primary); border-color: var(--color-primary);" title="저장"><i class="mdi mdi-check"></i></button>
+            </div>
+            <button class="modal-close" onclick="closeModal('viewModal')">&times;</button>
+        </div>
+        <div id="viewModeBody">
+            <div class="modal-body">
+                <h1 id="viewNoteTitle" style="font-size: 2rem; font-weight: 700; margin-bottom: 8px;"></h1>
+                <div id="viewNoteMeta" style="margin-bottom: 24px; color: var(--text-tertiary); font-size: 0.9rem;"></div>
+                <div id="viewNoteContent" class="view-content-body"></div>
+            </div>
+        </div>
+        <div id="editModeBody" style="display: none;">
+            <div class="modal-body">
+                <input type="text" id="editNoteTitle" class="title-input">
+                <textarea id="editNoteContent" class="content-area"></textarea>
+            </div>
+            <div class="modal-footer edit-mode-footer" style="display: flex;">
+                <button class="cancel-btn" onclick="disableEditMode()">취소</button>
+                <button class="save-btn" onclick="updateNote()">변경 사항 저장</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const notesData = {{ notes_json|safe }};
+    const csrfToken = '{{ csrf_token }}';
+    let selectedFolderId = {% if selected_folder %}{{ selected_folder.id }}{% else %}null{% endif %};
+    let viewingNoteId = null;
+
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    function closeModal(id) { 
+        document.getElementById(id).classList.remove('active');
+        if (id === 'viewModal') disableEditMode();
+    }
+
+    function openNoteModal() { openModal('noteModal'); document.getElementById('noteTitle').focus(); }
+    function openSubjectModal() { openModal('subjectModal'); document.getElementById('subjectName').focus(); }
+
+    function selectSubject(id) {
+        const url = id ? `?folder=${id}` : window.location.pathname;
+        window.location.href = url;
+    }
+
+    async function deleteSubject(folderId, folderName) {
+        if (!confirm('"' + folderName + '" 과목을 삭제하시겠습니까? 관련 메모도 모두 삭제됩니다.')) return;
+        try {
+            const res = await fetch("{% url 'delete_subject_folder' %}", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+                body: JSON.stringify({ folder_id: folderId })
+            });
+            if (res.ok) window.location.href = window.location.pathname;
+            else alert('삭제에 실패했습니다.');
+        } catch (e) { alert('오류가 발생했습니다.'); }
+    }
+
+    async function createSubject() {
+        const name = document.getElementById('subjectName').value.trim();
+        if (!name) { alert('과목 이름을 입력해 주세요.'); return; }
+        try {
+            const res = await fetch("{% url 'create_subject_folder' %}", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+                body: JSON.stringify({ name })
+            });
+            if (res.ok) location.reload();
+            else { const d = await res.json(); alert(d.error || '생성에 실패했습니다.'); }
+        } catch (e) { alert('오류가 발생했습니다.'); }
+    }
+
+    async function saveNote() {
+        const title = document.getElementById('noteTitle').value.trim();
+        const content = document.getElementById('noteContent').value.trim();
+        if (!title || !content) { alert('제목과 내용을 모두 입력해 주세요.'); return; }
+        try {
+            const res = await fetch("{% url 'create_note' %}", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+                body: JSON.stringify({ title, content, folder_id: selectedFolderId })
+            });
+            if (res.ok) location.reload();
+            else alert('저장에 실패했습니다.');
+        } catch (e) { alert('오류가 발생했습니다.'); }
+    }
+
+    function viewNote(id) {
+        const note = notesData[id];
+        if (!note) return;
+        viewingNoteId = id;
+        document.getElementById('viewNoteTitle').textContent = note.title || '제목 없는 메모';
+        document.getElementById('viewNoteContent').textContent = note.content;
+        document.getElementById('viewNoteMeta').innerHTML = `최종 수정: ${note.updated_at} • <b>${note.folder_name}</b>`;
+        
+        const pinBtn = document.getElementById('pinActionBtn');
+        if (note.is_pinned) pinBtn.classList.add('active');
+        else pinBtn.classList.remove('active');
+        
+        openModal('viewModal');
+    }
+
+    function enableEditMode() {
+        const note = notesData[viewingNoteId];
+        document.getElementById('editNoteTitle').value = note.title;
+        document.getElementById('editNoteContent').value = note.content;
+        document.getElementById('viewModeBody').style.display = 'none';
+        document.getElementById('viewModeActions').style.display = 'none';
+        document.getElementById('editModeBody').style.display = 'block';
+        document.getElementById('editModeActions').style.display = 'flex';
+    }
+
+    function disableEditMode() {
+        document.getElementById('viewModeBody').style.display = 'block';
+        document.getElementById('viewModeActions').style.display = 'flex';
+        document.getElementById('editModeBody').style.display = 'none';
+        document.getElementById('editModeActions').style.display = 'none';
+    }
+
+    async function updateNote() {
+        const title = document.getElementById('editNoteTitle').value.trim();
+        const content = document.getElementById('editNoteContent').value.trim();
+        if (!title || !content) { alert('제목과 내용을 모두 입력해 주세요.'); return; }
+        try {
+            const res = await fetch(`/notes/update/${viewingNoteId}/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+                body: JSON.stringify({ title, content })
+            });
+            if (res.ok) location.reload();
+            else alert('수정에 실패했습니다.');
+        } catch (e) { alert('오류가 발생했습니다.'); }
+    }
+
+    async function togglePin(id) {
+        try {
+            const res = await fetch(`/notes/pin/${id}/`, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': csrfToken }
+            });
+            if (res.ok) location.reload();
+        } catch (e) {}
+    }
+
+    function handleViewPin() { if (viewingNoteId) togglePin(viewingNoteId); }
+
+    async function deleteNote(id, title) {
+        if (!confirm('"' + title + '" 메모를 삭제하시겠습니까?')) return;
+        try {
+            const res = await fetch(`/notes/delete/${id}/`, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': csrfToken }
+            });
+            if (res.ok) location.reload();
+            else alert('삭제에 실패했습니다.');
+        } catch (e) { alert('오류가 발생했습니다.'); }
+    }
+
+    function handleViewDelete() {
+        if (viewingNoteId && notesData[viewingNoteId]) {
+            deleteNote(viewingNoteId, notesData[viewingNoteId].title);
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.active').forEach(m => closeModal(m.id));
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+            if (document.getElementById('noteModal').classList.contains('active')) saveNote();
+            else if (document.getElementById('viewModal').classList.contains('active') && document.getElementById('editModeBody').style.display !== 'none') updateNote();
+            else if (document.getElementById('subjectModal').classList.contains('active')) createSubject();
+        }
+    });
+
+    document.querySelectorAll('.modal-overlay').forEach(modal => {
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(modal.id); });
+    });
+</script>
 {% endblock %}

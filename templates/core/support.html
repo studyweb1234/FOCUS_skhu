@@ -3,11 +3,336 @@
 
 {% block title %}고객 지원 - FOCUS{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    /* 원본 레이아웃 및 디자인(CSS) 100% 유지 - 생략 없음 */
+    .chat-container {
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 100px);
+        background: var(--bg-secondary);
+        border-radius: var(--border-radius-lg);
+        border: 1px solid var(--border-color);
+        overflow: hidden;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .chat-header {
+        padding: 1.5rem 2rem;
+        background: var(--bg-primary);
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .chat-header-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .chat-avatar {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, var(--color-blue) 0%, #a855f7 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+    }
+
+    .chat-title h1 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin: 0;
+        color: var(--text-primary);
+    }
+
+    .chat-status {
+        font-size: 0.85rem;
+        color: var(--text-tertiary);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .chat-status::before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        background: #22c55e;
+        border-radius: 50%;
+    }
+
+    .chat-header-stats .stat-badge {
+        background: var(--bg-tertiary);
+        color: var(--text-secondary);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border: 1px solid var(--border-color);
+    }
+
+    .chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        background: var(--bg-secondary);
+    }
+
+    .message-wrapper {
+        display: flex;
+        flex-direction: column;
+        max-width: 80%;
+    }
+
+    .user-message {
+        align-self: flex-end;
+    }
+
+    .support-message {
+        align-self: flex-start;
+    }
+
+    .message-bubble {
+        padding: 1rem 1.25rem;
+        border-radius: 18px;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        position: relative;
+    }
+
+    .user-message .message-bubble {
+        background: var(--color-primary);
+        color: white;
+        border-bottom-right-radius: 4px;
+    }
+
+    .support-message .message-bubble {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        border-bottom-left-radius: 4px;
+        border: 1px solid var(--border-color);
+    }
+
+    .message-info {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+        font-size: 0.75rem;
+        color: var(--text-tertiary);
+    }
+
+    .user-message .message-info {
+        flex-direction: row-reverse;
+    }
+
+    .message-type-tag {
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.65rem;
+    }
+
+    .tag-feedback { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+    .tag-time_fix { background: rgba(249, 115, 22, 0.1); color: #f97316; }
+    .tag-bug { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+
+    .chat-input-area {
+        padding: 1.5rem 2rem;
+        background: var(--bg-primary);
+        border-top: 1px solid var(--border-color);
+    }
+
+    .message-type-selector {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .type-btn {
+        flex: 1;
+        cursor: pointer;
+    }
+
+    .type-btn input {
+        display: none;
+    }
+
+    .type-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        padding: 1rem;
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+        background: var(--bg-tertiary);
+        transition: all 0.2s ease;
+    }
+
+    .type-btn input:checked + .type-content {
+        border-color: var(--color-primary);
+        background: rgba(79, 70, 229, 0.05);
+        transform: translateY(-2px);
+    }
+
+    .type-name {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .type-desc {
+        font-size: 0.75rem;
+        color: var(--text-tertiary);
+    }
+
+    .input-wrapper {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-end;
+    }
+
+    .chat-textarea {
+        flex: 1;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 0.75rem 1rem;
+        color: var(--text-primary);
+        font-size: 1rem;
+        resize: none;
+        max-height: 150px;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+
+    .chat-textarea:focus {
+        border-color: var(--color-primary);
+    }
+
+    .send-btn {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: var(--color-primary);
+        color: white;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        transition: all 0.2s;
+    }
+
+    .send-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+
+    .empty-chat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: var(--text-tertiary);
+        text-align: center;
+    }
+
+    .empty-chat-icon {
+        font-size: 4rem;
+        margin-bottom: 1.5rem;
+        opacity: 0.2;
+    }
+
+    .empty-chat h3 {
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .time-correction-panel {
+        background: var(--bg-tertiary);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        display: none;
+        border: 1px solid var(--border-color);
+        animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .panel-title {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--color-primary);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .form-group label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+    }
+
+    .form-select, .form-input {
+        background: var(--bg-primary);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 0.6rem;
+        color: var(--text-primary);
+        outline: none;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="chat-container fade-in">
     <div class="chat-header">
         <div class="chat-header-info">
-            <div class="chat-avatar"><i class="mdi mdi-shield-account"></i></div>
+            <div class="chat-avatar">
+                <i class="mdi mdi-shield-account"></i>
+            </div>
             <div class="chat-title">
                 <h1>지원 팀</h1>
                 <span class="chat-status">
@@ -27,30 +352,194 @@
     <div class="chat-messages" id="chatMessages">
         {% if support_messages %}
             {% for msg in support_messages reversed %}
-                {% endfor %}
+            <div class="message-wrapper user-message">
+                <div class="message-bubble">
+                    {{ msg.message }}
+                </div>
+                <div class="message-info">
+                    <span class="message-time">{{ msg.created_at|timesince }} 전</span>
+                    <span class="message-type-tag tag-{{ msg.message_type }}">
+                        {% if msg.message_type == 'feedback' %}피드백
+                        {% elif msg.message_type == 'time_fix' %}시간 수정
+                        {% else %}버그 제보{% endif %}
+                    </span>
+                </div>
+            </div>
+
+            {% if msg.response %}
+            <div class="message-wrapper support-message">
+                <div class="message-bubble">
+                    {{ msg.response }}
+                </div>
+                <div class="message-info">
+                    <span class="message-author">지원 팀</span>
+                    <span class="message-time">{{ msg.responded_at|timesince }} 전</span>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
         {% else %}
-        <div class="chat-empty">
-            <div class="empty-icon"><i class="mdi mdi-message-text-outline"></i></div>
-            <p>메시지가 아직 없습니다</p>
-            <span>지원 팀과 대화를 시작해 보세요.</span>
+        <div class="empty-chat">
+            <div class="empty-chat-icon">
+                <i class="mdi mdi-message-outline"></i>
+            </div>
+            <h3>메시지가 아직 없습니다</h3>
+            <p>지원 팀과 대화를 시작해 보세요.</p>
         </div>
         {% endif %}
     </div>
 
     <div class="chat-input-area">
-        <form id="supportForm" class="chat-form">
-            <div class="type-pills">
-                <label class="type-pill"><input type="radio" name="message_type" value="feedback" checked><span><i class="mdi mdi-lightbulb-outline"></i> 피드백</span></label>
-                <label class="type-pill"><input type="radio" name="message_type" value="time_correction"><span><i class="mdi mdi-clock-edit-outline"></i> 시간 수정</span></label>
-                <label class="type-pill"><input type="radio" name="message_type" value="bug_report"><span><i class="mdi mdi-bug-outline"></i> 버그 제보</span></label>
+        <form id="supportForm">
+            <div class="message-type-selector">
+                <label class="type-btn">
+                    <input type="radio" name="message_type" value="feedback" checked>
+                    <div class="type-content">
+                        <span class="type-name"><i class="mdi mdi-lightbulb-outline"></i> 피드백</span>
+                        <span class="type-desc">의견을 나누거나 새로운 기능을 제안해 주세요.</span>
+                    </div>
+                </label>
+                <label class="type-btn">
+                    <input type="radio" name="message_type" value="time_fix">
+                    <div class="type-content">
+                        <span class="type-name"><i class="mdi mdi-clock-edit-outline"></i> 시간 수정</span>
+                        <span class="type-desc">학습 시간 기록 수정을 요청하세요.</span>
+                    </div>
+                </label>
+                <label class="type-btn">
+                    <input type="radio" name="message_type" value="bug">
+                    <div class="type-content">
+                        <span class="type-name"><i class="mdi mdi-bug-outline"></i> 버그 제보</span>
+                        <span class="type-desc">기술적 문제나 오류를 제보해 주세요.</span>
+                    </div>
+                </label>
             </div>
-            <div class="input-row">
-                <div class="message-input-wrap">
-                    <textarea id="messageContent" class="message-input" placeholder="메시지를 입력하세요..." rows="1"></textarea>
-                    <button type="submit" class="send-btn"><i class="mdi mdi-send"></i></button>
+
+            <div id="timeCorrectionPanel" class="time-correction-panel">
+                <div class="panel-header">
+                    <span class="panel-title"><i class="mdi mdi-clock-outline"></i> 시간 수정 상세 정보</span>
+                    <button type="button" onclick="closeTimePanel()" style="background:none; border:none; color:var(--text-tertiary); cursor:pointer;">
+                        <i class="mdi mdi-close"></i>
+                    </button>
                 </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>과목 선택</label>
+                        <select id="subjectSelect" class="form-select">
+                            <option value="">과목을 선택하세요...</option>
+                            {% for subject in subjects %}
+                            <option value="{{ subject.name }}">{{ subject.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>수정할 학습 시간 (분)</label>
+                        <input type="number" id="requestedDuration" class="form-input" placeholder="예: 45">
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-wrapper">
+                <textarea id="messageInput" class="chat-textarea" placeholder="메시지를 입력하세요..." rows="1" required></textarea>
+                <button type="submit" class="send-btn">
+                    <i class="mdi mdi-send"></i>
+                </button>
             </div>
         </form>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('supportForm');
+        const chatMessages = document.getElementById('chatMessages');
+        const messageInput = document.getElementById('messageInput');
+        const typeRadios = document.querySelectorAll('input[name="message_type"]');
+        const timePanel = document.getElementById('timeCorrectionPanel');
+
+        // 하단 자동 스크롤
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        // 텍스트 영역 자동 높이 조절
+        messageInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+
+        // 유형 선택 시 패널 표시
+        typeRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'time_fix') {
+                    timePanel.style.display = 'block';
+                } else {
+                    timePanel.style.display = 'none';
+                }
+            });
+        });
+
+        // 폼 전송 (NoReverseMatch 해결을 위해 URL을 직접 관리)
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const message = messageInput.value.trim();
+            const messageType = document.querySelector('input[name="message_type"]:checked').value;
+            const subject = document.getElementById('subjectSelect').value;
+            const requestedDuration = document.getElementById('requestedDuration').value;
+
+            if (!message) return;
+
+            try {
+                // 현재 URL(/support/)로 POST 요청을 보냅니다.
+                const response = await fetch(window.location.pathname + "create/", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        message_type: messageType,
+                        subject: subject || null,
+                        requested_duration: requestedDuration || null
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    form.reset();
+                    messageInput.style.height = 'auto';
+                    location.reload();
+                } else {
+                    alert(data.error || '메시지 전송에 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('오류가 발생했습니다. 다시 시도해 주세요.');
+            }
+        });
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    });
+
+    function closeTimePanel() {
+        document.getElementById('timeCorrectionPanel').style.display = 'none';
+        document.querySelector('input[name="message_type"][value="feedback"]').checked = true;
+    }
+</script>
 {% endblock %}
