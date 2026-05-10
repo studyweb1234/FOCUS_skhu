@@ -306,7 +306,7 @@ function initDashboard(config) {
 
         if (selectedDateLabel) {
             if (selDate.getTime() === todayDate.getTime()) {
-                selectedDateLabel.textContent = 'Today';
+                selectedDateLabel.textContent = '오늘';
             } else {
                 selectedDateLabel.textContent = selectedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
             }
@@ -342,7 +342,7 @@ function initDashboard(config) {
             }
         };
 
-        renderList(selectedDateTasks, selectedDateList, '<i class="mdi mdi-calendar-blank-outline" style="opacity: 0.5;"></i> 예정된 일이 없습니다.');
+        renderList(selectedDateTasks, selectedDateList, '<i class="mdi mdi-calendar-blank-outline" style="opacity: 0.5;"></i>  이 날짜에 예정된 할 일이 없습니다.');
         renderList(upcomingTasks, upcomingList, '예정된 과제가 없습니다.');
     }
 
