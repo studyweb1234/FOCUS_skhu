@@ -89,8 +89,8 @@
     <div class="page-header flex-between">
         <div>
             <h1 class="page-title"><i class="mdi mdi-clipboard-text-outline"></i> 과제 관리</h1>
-            <p class="page-subtitle" style="margin-bottom: 0.5rem;" data-dynamic-greeting="assignments">{{ greeting }}</p>
-            <p class="page-subtitle" style="color: var(--text-tertiary); font-size: 0.9rem;">과제를 해결할 시간입니다! 칸반 보드로 마감 기한을 관리하세요.</p>
+            <p class="page-subtitle" style="margin-bottom: 0.5rem;" data-dynamic-greeting="assignments">과제를 해결할 시간입니다!</p>
+            <p class="page-subtitle" style="color: var(--text-tertiary); font-size: 0.9rem;">칸반 보드로 마감 기한을 관리하세요</p>
         </div>
         <div class="header-actions">
             <div class="stats-badges">
@@ -234,7 +234,7 @@
 
 {% block extra_js %}
 <script>
-    // 자바스크립트 로직 원본 유지 및 한글 텍스트 수정
+    // 자바스크립트 내 텍스트 한글화
     let assignments = {{ assignments_json|safe }};
     const todoColumn = document.getElementById('todoColumn');
     const inProgressColumn = document.getElementById('inProgressColumn');
@@ -300,10 +300,11 @@
     
     document.getElementById('clearDeadlineBtn').addEventListener('click', () => {
         dateInput.value = '';
-        dateInput.style.display = 'none';
-        timeInput.style.display = 'none';
+        timeInput.value = '23:59';
         document.querySelectorAll('.notion-quick-btn').forEach(b => b.classList.remove('active'));
         document.querySelector('.notion-no-deadline').classList.add('active');
+        dateInput.style.display = 'none';
+        timeInput.style.display = 'none';
     });
 
     document.querySelectorAll('.notion-quick-btn').forEach(btn => {
@@ -392,7 +393,7 @@
                 <div class="time-container">
                     <div class="time-info">
                         <div class="time-remaining-large">${formatHoursRemainingShort(hours)}</div>
-                        <div class="time-label">${hours === null ? '' : (hours < 0 ? '기한 지남' : '남음')}</div>
+                        <div class="time-label">${hours === null ? '' : (hours < 0 ? '지연' : '남음')}</div>
                     </div>
                     <button class="move-btn" onclick="event.stopPropagation(); moveAssignment(${a.id}, '${status === 'todo' ? 'in_progress' : 'completed'}')" title="${nextAction}">
                         <i class="mdi ${nextIcon}"></i>
