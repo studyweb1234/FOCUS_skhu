@@ -89,8 +89,8 @@
     <div class="page-header flex-between">
         <div>
             <h1 class="page-title"><i class="mdi mdi-clipboard-text-outline"></i> 과제 관리</h1>
-            <p class="page-subtitle" style="margin-bottom: 0.5rem;" data-dynamic-greeting="assignments">과제를 해결할 시간입니다!</p>
-            <p class="page-subtitle" style="color: var(--text-tertiary); font-size: 0.9rem;">칸반 보드로 마감 기한을 관리하세요</p>
+            <p class="page-subtitle" style="margin-bottom: 0.5rem;">과제를 해결할 시간입니다!</p>
+            <p class="page-subtitle" style="color: var(--text-tertiary); font-size: 0.9rem;">칸반 보드로 마감 기한을 관리하세요.</p>
         </div>
         <div class="header-actions">
             <div class="stats-badges">
@@ -169,7 +169,6 @@
     <div class="modal notion-modal">
         <button class="modal-close" id="closeModalBtn">&times;</button>
         <input type="text" id="assignmentTitle" class="notion-title-input" placeholder="제목 없는 과제" required>
-        
         <div class="notion-properties">
             <div class="notion-property-row">
                 <div class="notion-property-label"><i class="mdi mdi-flag-outline"></i><span>우선순위</span></div>
@@ -181,7 +180,6 @@
                     </select>
                 </div>
             </div>
-
             <div class="notion-property-row">
                 <div class="notion-property-label"><i class="mdi mdi-checkbox-marked-circle-outline"></i><span>상태</span></div>
                 <div class="notion-property-value">
@@ -191,42 +189,32 @@
                     </select>
                 </div>
             </div>
-
             <div class="notion-property-row notion-notes-row">
                 <div class="notion-property-label"><i class="mdi mdi-text"></i><span>메모</span></div>
                 <div class="notion-property-value">
                     <textarea id="assignmentDescription" class="notion-textarea" placeholder="메모 추가..."></textarea>
                 </div>
             </div>
-
             <div class="notion-property-row">
                 <div class="notion-property-label"><i class="mdi mdi-calendar-outline"></i><span>마감 기한</span></div>
                 <div class="notion-property-value">
                     <div class="notion-date-wrapper">
                         <input type="date" id="assignmentDeadline" class="notion-date-input">
                         <input type="time" id="assignmentTime" class="notion-time-input" value="23:59">
-                        <button type="button" class="notion-clear-date" id="clearDeadlineBtn" title="기한 삭제">
-                            <i class="mdi mdi-close"></i>
-                        </button>
+                        <button type="button" class="notion-clear-date" id="clearDeadlineBtn" title="기한 삭제"><i class="mdi mdi-close"></i></button>
                     </div>
                 </div>
             </div>
         </div>
-
         <div class="notion-quick-options">
             <button type="button" class="notion-quick-btn" data-days="0">오늘</button>
             <button type="button" class="notion-quick-btn" data-days="1">내일</button>
             <button type="button" class="notion-quick-btn" data-days="7">다음 주</button>
             <button type="button" class="notion-quick-btn notion-no-deadline" data-no-deadline="true">기한 없음</button>
         </div>
-
         <div class="notion-modal-actions">
-            <button type="button" id="deleteAssignmentBtn" class="notion-delete-btn" style="display: none;">
-                <i class="mdi mdi-trash-can-outline"></i> 삭제
-            </button>
-            <button type="button" id="saveAssignmentBtn" class="notion-save-btn">
-                <i class="mdi mdi-check"></i> <span id="saveButtonText">과제 추가</span>
-            </button>
+            <button type="button" id="deleteAssignmentBtn" class="notion-delete-btn" style="display: none;"><i class="mdi mdi-trash-can-outline"></i> 삭제</button>
+            <button type="button" id="saveAssignmentBtn" class="notion-save-btn"><i class="mdi mdi-check"></i> <span id="saveButtonText">과제 추가</span></button>
         </div>
     </div>
 </div>
@@ -234,7 +222,7 @@
 
 {% block extra_js %}
 <script>
-    // 자바스크립트 내 텍스트 한글화
+    // 자바스크립트 로직 및 텍스트 한글화
     let assignments = {{ assignments_json|safe }};
     const todoColumn = document.getElementById('todoColumn');
     const inProgressColumn = document.getElementById('inProgressColumn');
@@ -393,7 +381,7 @@
                 <div class="time-container">
                     <div class="time-info">
                         <div class="time-remaining-large">${formatHoursRemainingShort(hours)}</div>
-                        <div class="time-label">${hours === null ? '' : (hours < 0 ? '지연' : '남음')}</div>
+                        <div class="time-label">${hours === null ? '' : (hours < 0 ? '기한 지남' : '남음')}</div>
                     </div>
                     <button class="move-btn" onclick="event.stopPropagation(); moveAssignment(${a.id}, '${status === 'todo' ? 'in_progress' : 'completed'}')" title="${nextAction}">
                         <i class="mdi ${nextIcon}"></i>
