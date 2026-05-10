@@ -49,8 +49,8 @@ function createActivityChart(type) {
     // Fallback placeholders if empty
     if (labels.length === 0) {
         labels = type === 'weekly'
-            ? ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-            : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+            ? ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일']
+            : ['1월', '2월', '3월', '4월', '5월', '6월'];
         data = labels.map(function() { return 0; });
     }
 
@@ -342,8 +342,8 @@ function initDashboard(config) {
             }
         };
 
-        renderList(selectedDateTasks, selectedDateList, '<i class="mdi mdi-calendar-blank-outline" style="opacity: 0.5;"></i> No tasks for this date');
-        renderList(upcomingTasks, upcomingList, 'No other pending tasks');
+        renderList(selectedDateTasks, selectedDateList, '<i class="mdi mdi-calendar-blank-outline" style="opacity: 0.5;"></i> 예정된 일이 없습니다.');
+        renderList(upcomingTasks, upcomingList, '예정된 과제가 없습니다.');
     }
 
     function renderTaskItem(task, container) {
@@ -439,7 +439,7 @@ function renderLeaderboardList(containerId, items, valueSuffix) {
     var container = document.getElementById(containerId);
     if (!container) return;
     if (!items || items.length === 0) {
-        container.innerHTML = '<div class="text-tertiary" style="font-size: 0.85rem;">No data yet.</div>';
+        container.innerHTML = '<div class="text-tertiary" style="font-size: 0.85rem;">데이터가 없습니다.</div>';
         return;
     }
     container.innerHTML = items.map(function(item, idx) {

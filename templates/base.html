@@ -114,14 +114,14 @@
                         <a href="{% url 'dashboard' %}" class="{% if request.path == '/dashboard/' %}active{% endif %}"
                             data-tooltip="View your dashboard">
                             <span class="icon"><i class="mdi mdi-view-dashboard"></i></span>
-                            <span>Dashboard</span>
+                            <span>대시보드</span>
                         </a>
                     </li>
                     <li>
                         <a href="{% url 'study' %}" class="{% if request.path == '/study/' %}active{% endif %}"
                             data-tooltip="Start study session">
                             <span class="icon"><i class="mdi mdi-timer-outline"></i></span>
-                            <span>Study Timer</span>
+                            <span>학습 타이머</span>
                         </a>
                     </li>
                     <li>
@@ -129,21 +129,21 @@
                             class="{% if request.path == '/assignments/' %}active{% endif %}"
                             data-tooltip="Manage assignments">
                             <span class="icon"><i class="mdi mdi-clipboard-text-outline"></i></span>
-                            <span>Assignments</span>
+                            <span>과제 관리</span>
                         </a>
                     </li>
                     <li>
                         <a href="{% url 'notes' %}" class="{% if request.path == '/notes/' %}active{% endif %}"
                             data-tooltip="Organize your quick notes">
                             <span class="icon"><i class="mdi mdi-notebook-outline"></i></span>
-                            <span>Quick Notes</span>
+                            <span>빠른 메모</span>
                         </a>
                     </li>
                     <li>
                         <a href="{% url 'support' %}" class="{% if request.path == '/support/' %}active{% endif %}"
                             data-tooltip="Contact admin for support">
                             <span class="icon"><i class="mdi mdi-headset"></i></span>
-                            <span>Support</span>
+                            <span>고객 지원</span>
                         </a>
                     </li>
                 </ul>
@@ -204,7 +204,7 @@
             <div id="globalTimerContainer" class="global-timer-container hidden">
                 <div class="global-timer-dot"></div>
                 <div>
-                    <div class="global-timer-label">Session Active</div>
+                    <div class="global-timer-label">학습 중</div>
                     <div id="globalTimerDisplay" class="global-timer-display">00:00</div>
                 </div>
             </div>
@@ -215,7 +215,7 @@
                     <i class="mdi mdi-clock-check-outline"></i>
                 </div>
                 <div>
-                    <div class="today-study-label">Today's Study</div>
+                    <div class="today-study-label">오늘의 학습 시간</div>
                     <div id="todayStudyDisplay" class="today-study-display">0h 0m</div>
                 </div>
             </div>
@@ -227,13 +227,13 @@
                         <i class="mdi mdi-{% if user.is_superuser %}shield-crown{% else %}account{% endif %}"></i>
                     </div>
                     <div class="user-info">
-                        <div class="user-profile-label">{% if user.is_superuser %}Administrator{% else %}Signed in as{% endif %}</div>
+                        <div class="user-profile-label">{% if user.is_superuser %}관리자{% else %}로그인 계정{% endif %}</div>
                         <div class="user-profile-name">{{ user.username }}</div>
                     </div>
                 </div>
                 <a href="{% url 'logout' %}" class="logout-btn">
                     <i class="mdi mdi-logout-variant"></i>
-                    <span>Sign Out</span>
+                    <span>로그아웃</span>
                 </a>
             </div>
         </aside>
@@ -356,7 +356,7 @@
             const hours = Math.floor(minutes / 60);
             const mins = minutes % 60;
             if (hours > 0) {
-                return `${hours}h ${mins}m`;
+                return `${hours}시간 ${mins}분`;
             }
             return `${mins}m`;
         }
@@ -431,7 +431,7 @@
             if (totalMinutes >= 60) {
                 const hours = Math.floor(totalMinutes / 60);
                 const mins = totalMinutes % 60;
-                displayText = mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
+                displayText = mins > 0 ? `${hours}시간 ${mins}분` : `${hours}시간`;
             } else {
                 displayText = `${totalMinutes}m`;
             }
@@ -442,7 +442,7 @@
             if (activeSessionMinutes > 0) {
                 todayStatCard.style.borderColor = 'var(--color-green)';
                 todayStatCard.style.boxShadow = '0 0 12px rgba(102, 153, 119, 0.3)';
-                todayStatLabel.innerHTML = 'Study Today <span style="color: var(--color-green); font-size: 0.7rem;">● LIVE</span>';
+                todayStatLabel.innerHTML = '오늘의 학습 <span style="color: var(--color-green); font-size: 0.7rem;">● 실시간</span>';
             } else {
                 todayStatCard.style.borderColor = '';
                 todayStatCard.style.boxShadow = '';
@@ -498,7 +498,7 @@
                         if (globalTimerLabel && state.subject) {
                             globalTimerLabel.textContent = `Stopwatch: ${state.subject}`;
                         } else if (globalTimerLabel) {
-                            globalTimerLabel.textContent = 'Stopwatch Running';
+                            globalTimerLabel.textContent = '스탑워치 작동 중';
                         }
                         
                         // Green dot for stopwatch
@@ -560,7 +560,7 @@
                     globalTimerDisplay.textContent = formatGlobalTime(state.remainingTime);
                     
                     if (globalTimerLabel) {
-                        globalTimerLabel.textContent = 'Paused';
+                        globalTimerLabel.textContent = '일시정지';
                     }
                     
                     // Yellow dot for paused
@@ -650,13 +650,13 @@
             const hour = new Date().getHours();
             
             if (hour >= 5 && hour < 12) {
-                return 'Good skhu!';
+                return '좋은 아침이에요!';
             } else if (hour >= 12 && hour < 17) {
-                return 'Good afternoon!';
+                return '즐거운 오후입니다!';
             } else if (hour >= 17 && hour < 21) {
-                return 'Good evening!';
+                return '편안한 저녁 되세요!';
             } else {
-                return 'Hello there!';
+                return '안녕하세요!';
             }
         }
 
@@ -664,13 +664,13 @@
             const hour = new Date().getHours();
             
             if (hour >= 5 && hour < 12) {
-                return 'Ready to focus?';
+                return '공부로 하루를 시작해볼까요?';
             } else if (hour >= 12 && hour < 17) {
-                return 'Afternoon focus time!';
+                return '오후 열공 시간 입니다!';
             } else if (hour >= 17 && hour < 21) {
-                return 'Evening study session?';
+                return '저녁 학습 계획을 시작할까요?';
             } else {
-                return 'Late night productivity?';
+                return '밤 늦게 까지 정말 대단해요!';
             }
         }
 

@@ -1,4 +1,5 @@
-﻿{% extends 'base.html' %}
+﻿
+{% extends 'base.html' %}
 {% load static %}
 
 {% block title %}Home - FOCUS{% endblock %}
@@ -627,7 +628,7 @@
             <!-- Greeting & Quote -->
             <div class="greeting-section">
                 <h1 class="greeting-title" data-dynamic-greeting="dashboard">{{ greeting }}</h1>
-                <p class="greeting-quote">"{{ quote }}"</p>
+                <p class="greeting-quote">"당신의 집중이 당신의 오늘을 결정합니다."</p>
             </div>
 
 
@@ -635,15 +636,15 @@
             <div class="grid grid-4 mb-4" id="statsGrid">
                 <div class="stat-card" id="todayStatCard">
                     <div class="stat-value" id="todayStatValue">{{ today_total }}</div>
-                    <div class="stat-label" id="todayStatLabel">Study Today</div>
+                    <div class="stat-label" id="todayStatLabel">오늘의 학습</div>
                 </div>
                 <div class="stat-card" id="monthlyStatCard">
                     <div class="stat-value" id="monthlyStatValue">{{ monthly_total_hours }}</div>
-                    <div class="stat-label">Hours Month</div>
+                    <div class="stat-label">이달의 학습 시간</div>
                 </div>
                 <div class="stat-card" id="streakStatCard">
                     <div class="stat-value" id="streakStatValue" style="color: var(--color-green);">{{ streak }}</div>
-                    <div class="stat-label">Day Streak</div>
+                    <div class="stat-label">연속 학습일</div>
                     {% if highest_streak > 0 %}
                     <div style="font-size: 0.7rem; color: var(--text-tertiary); margin-top: 4px;">
                         <i class="mdi mdi-trophy" style="color: #f59e0b;"></i> Best: {{ highest_streak }}
@@ -652,7 +653,7 @@
                 </div>
                 <div class="stat-card" id="pendingStatCard">
                     <div class="stat-value" id="pendingStatValue">{{ pending_assignments_count }}</div>
-                    <div class="stat-label">Pending</div>
+                    <div class="stat-label">미완료 과제</div>
                 </div>
             </div>
 
@@ -660,13 +661,13 @@
             <div class="card mb-4" id="weeklyActivityCard">
                 <div class="card-header">
                     <h3 class="card-title" id="chartTitle"><i class="mdi mdi-chart-line" style="margin-right: 8px;"></i>
-                        Weekly Activity</h3>
+                        주간 활동 기록</h3>
                     <div
                         style="background: var(--bg-secondary); padding: 2px; border-radius: 6px; border: 1px solid var(--border-color);">
                         <button class="chart-toggle-btn active" id="btnWeekly"
-                            onclick="toggleChart('weekly')">Weekly</button>
+                            onclick="toggleChart('weekly')">주간</button>
                         <button class="chart-toggle-btn" id="btnMonthly"
-                            onclick="toggleChart('monthly')">Monthly</button>
+                            onclick="toggleChart('monthly')">월간</button>
                     </div>
                 </div>
                 <div class="card-body" style="height: 280px;">
@@ -679,8 +680,8 @@
             <!-- Subject Breakdown - Pie Chart -->
             <div class="card mb-4" id="subjectBreakdownCard">
                 <div class="card-header">
-                    <h3 class="card-title"><i class="mdi mdi-chart-pie" style="margin-right: 8px;"></i> Study Time by
-                        Subject</h3>
+                    <h3 class="card-title"><i class="mdi mdi-chart-pie" style="margin-right: 8px;"></i> 과목 별 학습시간
+                    </h3>
                 </div>
                 <div class="card-body">
                     {% if subject_breakdown %}
@@ -700,7 +701,7 @@
                         </div>
                     </div>
                     {% else %}
-                    <p class="text-tertiary">No study data yet. Start studying to see your breakdown!</p>
+                    <p class="text-tertiary">학습 데이터가 없습니다. 공부를 시작하여 분석 내용을 확인해보세요!</p>
                     {% endif %}
                 </div>
             </div>
@@ -708,10 +709,10 @@
             <!-- Subjects Management -->
             <div class="card mb-4" id="subjectsCard">
                 <div class="card-header" style="display: flex; align-items: center; justify-content: space-between;">
-                    <h3 class="card-title" style="margin: 0;"><i class="mdi mdi-notebook-multiple" style="margin-right: 8px;"></i>My Subjects</h3>
+                    <h3 class="card-title" style="margin: 0;"><i class="mdi mdi-notebook-multiple" style="margin-right: 8px;"></i>나의 과목</h3>
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <input type="text" id="newSubjectName" class="form-input"
-                            placeholder="Add subject..." maxlength="100"
+                            placeholder="과목추가..." maxlength="100"
                             style="padding: 6px 12px; font-size: 0.85rem; border: 1px solid var(--border-color);
                                    border-radius: 20px; background: var(--bg-primary); width: 160px;"
                             onkeypress="if(event.key === 'Enter') addSubject()">
@@ -742,7 +743,7 @@
                         </div>
                         {% empty %}
                         <div class="text-tertiary" style="font-size: 0.85rem; width: 100%; text-align: center; padding: 12px 0;">
-                            No subjects yet — type above to add one
+                            등록된 과목이 없습니다. 위에서 이름을 입력해 추가해보세요.
                         </div>
                         {% endfor %}
                     </div>
@@ -756,7 +757,7 @@
             <div class="leaderboard-card">
                 <div class="leaderboard-header">
                     <div class="leaderboard-title" id="lbTitle">
-                        <i class="mdi mdi-fire"></i> Top Streaks
+                        <i class="mdi mdi-fire"></i> 연속 학습 순위
                     </div>
                     <button class="calendar-nav-btn" onclick="toggleLeaderboard()" title="Next View">
                         <i class="mdi mdi-chevron-right"></i>
@@ -774,10 +775,10 @@
                         </div>
                     </div>
                     {% empty %}
-                    <div class="text-tertiary" style="font-size: 0.85rem;">No active streaks yet.</div>
+                    <div class="text-tertiary" style="font-size: 0.85rem;">아직 활성화된 연속 학습 기록이 없습니다.</div>
                     {% endfor %}
                     {% if top_streaks %}
-                    <button class="see-all-btn" onclick="showAllLeaderboard('streaks')">See All</button>
+                    <button class="see-all-btn" onclick="showAllLeaderboard('streaks')">전체 보기</button>
                     {% endif %}
                 </div>
 
@@ -791,7 +792,7 @@
                         <div class="user-stat">{{ u.value }}</div>
                     </div>
                     {% empty %}
-                    <div class="text-tertiary" style="font-size: 0.85rem;">No study data this month.</div>
+                    <div class="text-tertiary" style="font-size: 0.85rem;">이번 달 학습 데이터가 없습니다.</div>
                     {% endfor %}
                     {% if top_study_time %}
                     <button class="see-all-btn" onclick="showAllLeaderboard('time')">See All</button>
@@ -809,13 +810,13 @@
                     </div>
                 </div>
                 <div class="calendar-days-header">
-                    <div>Mo</div>
-                    <div>Tu</div>
-                    <div>We</div>
-                    <div>Th</div>
-                    <div>Fr</div>
-                    <div>Sa</div>
-                    <div>Su</div>
+                    <div>월</div>
+                    <div>화</div>
+                    <div>수</div>
+                    <div>목</div>
+                    <div>금</div>
+                    <div>토</div>
+                    <div>일</div>
                 </div>
                 <div class="calendar-grid" id="calendarGrid"></div>
             </div>
@@ -824,7 +825,7 @@
             <div class="schedule-card" id="todayCard">
                 <div class="schedule-header">
                     <span><i class="mdi mdi-calendar-today" style="margin-right: 6px;"></i><span
-                            id="selectedDateLabel">Today</span></span>
+                            id="selectedDateLabel">오늘의 할일</span></span>
                     <span id="selectedDateCount"
                         style="font-size: 0.75rem; color: var(--text-tertiary); font-weight: normal;"></span>
                 </div>
@@ -835,7 +836,7 @@
             <!-- Upcoming Tasks -->
             <div class="schedule-card" style="margin-top: 0;" id="upcomingCard">
                 <div class="schedule-header">
-                    <span><i class="mdi mdi-calendar-clock" style="margin-right: 6px;"></i>Upcoming</span>
+                    <span><i class="mdi mdi-calendar-clock" style="margin-right: 6px;"></i>예정된 과제</span>
                     <span id="upcomingCount"
                         style="font-size: 0.75rem; color: var(--text-tertiary); font-weight: normal;"></span>
                 </div>
@@ -845,7 +846,7 @@
             <!-- No Deadline (Backlog) -->
             <div class="schedule-card" style="margin-top: 0;" id="noDeadlineCard">
                 <div class="schedule-header">
-                    <span><i class="mdi mdi-inbox" style="margin-right: 6px;"></i>No Deadline</span>
+                    <span><i class="mdi mdi-inbox" style="margin-right: 6px;"></i>기한 없음</span>
                     <span style="font-size: 0.75rem; color: var(--text-tertiary); font-weight: normal;">{{ no_deadline_assignments|length }}</span>
                 </div>
                 <div class="schedule-list">
@@ -865,14 +866,14 @@
                             <div class="schedule-info">
                                 <div class="schedule-title">{% if assignment.subject != 'General' %}{{ assignment.subject }}: {% endif %}{{ assignment.title }}</div>
                                 <div class="schedule-meta" style="color: #94a3b8;">
-                                    <i class="mdi mdi-minus"></i> No deadline set
+                                    <i class="mdi mdi-minus"></i> 기한이 설정되지 않음
                                 </div>
                             </div>
                         </div>
                         {% endfor %}
                     {% else %}
                         <div class="text-tertiary" style="text-align: center; padding: 20px; font-size: 0.85rem;">
-                            <i class="mdi mdi-check-circle-outline" style="opacity: 0.5;"></i> All tasks have deadlines
+                            <i class="mdi mdi-check-circle-outline" style="opacity: 0.5;"></i> 모든 과제에 기한이 설정되어 있습니다.
                         </div>
                     {% endif %}
                 </div>
