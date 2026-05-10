@@ -10,77 +10,1631 @@
 
 {% block extra_css %}
 <style>
-    /* 원본 스타일(CSS) 100% 유지 */
-    .main-content { padding: var(--spacing-lg) 0 !important; align-items: stretch !important; background: var(--bg-primary); min-height: 100vh; }
-    .content-container { max-width: 100% !important; width: 100%; padding: 0 var(--spacing-md) !important; }
-    .mdi { transition: transform 0.2s ease, color 0.2s ease; }
-    .page-title .mdi { font-size: 1.5rem; margin-right: 8px; background: linear-gradient(135deg, var(--color-blue) 0%, #a855f7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .page-header { padding: 0 var(--spacing-lg); margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: var(--spacing-md); align-items: center; justify-content: space-between; }
-    .page-title { font-size: 1.75rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.02em; }
-    .header-actions { display: flex; align-items: center; gap: 16px; }
-    .stats-badges { display: flex; gap: 10px; }
-    .stat-badge { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 12px; font-size: 0.85rem; font-weight: 600; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-secondary); transition: all 0.3s ease; }
-    .stat-badge:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); }
-    .stat-badge i { font-size: 1.2rem; transition: transform 0.3s ease; }
-    .stat-badge:hover i { transform: scale(1.15); }
-    .stat-pending { color: var(--color-orange); }
-    .stat-pending i { color: var(--color-orange); }
-    .stat-completed { color: var(--color-green); }
-    .stat-completed i { color: var(--color-green); }
-    .btn-add-assignment { display: flex; align-items: center; gap: 10px; padding: 12px 22px; border-radius: 14px; font-size: 0.9rem; font-weight: 600; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border: none; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25); }
-    .btn-add-assignment:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4); background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%); }
-    .btn-add-assignment i { font-size: 1.2rem; transition: transform 0.3s ease; }
-    .btn-add-assignment:hover i { transform: rotate(90deg); }
-    .kanban-board { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; padding: 0 var(--spacing-lg); margin-bottom: var(--spacing-xl); width: 100%; min-height: 500px; }
-    .kanban-column { background: var(--bg-secondary); border-radius: 16px; border: 1px solid var(--border-color); display: flex; flex-direction: column; min-height: 400px; overflow: hidden; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-    .kanban-column:hover { border-color: var(--border-color-light); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15); }
-    .kanban-column-header { padding: 16px 20px; border-bottom: 2px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; background: var(--bg-tertiary); flex-shrink: 0; }
-    .kanban-column-title { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 0.95rem; color: var(--text-primary); }
-    .kanban-column-title i { font-size: 1.3rem; transition: transform 0.3s ease; }
-    .kanban-column:hover .kanban-column-title i { transform: scale(1.1); }
-    .kanban-column-count { background: var(--bg-primary); color: var(--text-secondary); padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; min-width: 28px; text-align: center; }
-    .kanban-column.todo .kanban-column-header { border-bottom-color: var(--color-orange); }
-    .kanban-column.todo .kanban-column-title i { color: var(--color-orange); }
-    .kanban-column.todo .kanban-column-count { background: rgba(249, 115, 22, 0.15); color: var(--color-orange); }
-    .kanban-column.in-progress .kanban-column-header { border-bottom-color: var(--color-primary); }
-    .kanban-column.in-progress .kanban-column-title i { color: var(--color-primary); }
-    .kanban-column.in-progress .kanban-column-count { background: rgba(79, 70, 229, 0.15); color: var(--color-primary); }
-    .kanban-column.completed .kanban-column-header { border-bottom-color: var(--color-green); }
-    .kanban-column.completed .kanban-column-title i { color: var(--color-green); }
-    .kanban-column.completed .kanban-column-count { background: rgba(34, 197, 94, 0.15); color: var(--color-green); }
-    .kanban-column-body { padding: var(--spacing-sm); flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: var(--spacing-sm); }
-    .kanban-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: var(--spacing-xl); color: var(--text-tertiary); text-align: center; flex: 1; }
-    .kanban-empty i { font-size: 2.5rem; margin-bottom: var(--spacing-sm); opacity: 0.4; animation: float 3s ease-in-out infinite; }
-    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-    .kanban-empty p { font-size: 0.85rem; margin: 0; opacity: 0.6; }
-    .assignment-cube { border-radius: 16px; padding: 16px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); animation: fadeIn 0.4s ease-out backwards; cursor: grab; min-height: 110px; height: auto; border: none; }
-    .cube-content { display: flex; flex-direction: column; justify-content: space-between; height: 100%; flex: 1; position: relative; z-index: 2; gap: 10px; }
-    .assignment-title { font-weight: 600; margin-bottom: 4px; line-height: 1.35; z-index: 1; font-size: 0.95rem; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; word-break: break-word; letter-spacing: -0.01em; }
-    .assignment-subject { font-size: 0.8rem; font-weight: 500; z-index: 1; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; opacity: 0.85; }
-    .time-container { margin-top: auto; padding-top: 10px; display: flex; align-items: center; justify-content: space-between; flex: 0 0 auto; border-top: 1px solid var(--border-color); }
-    .time-remaining-large { font-weight: 700; line-height: 1; font-size: 1.15rem; letter-spacing: -0.02em; }
-    .time-label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.2; opacity: 0.8; }
-    .move-btn { width: 32px; height: 32px; border-radius: 10px; border: none; background: rgba(0, 0, 0, 0.25); backdrop-filter: blur(8px); color: rgba(255, 255, 255, 0.9); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; font-size: 1rem; }
-    .assignment-actions { position: absolute; top: 10px; right: 10px; display: flex; gap: 6px; z-index: 10; opacity: 0; transition: all 0.2s ease; transform: translateY(-4px); }
-    .assignment-cube:hover .assignment-actions { opacity: 1; transform: translateY(0); }
-    .action-btn { width: 30px; height: 30px; border-radius: 10px; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(8px); color: rgba(255, 255, 255, 0.9); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); font-size: 1rem; }
-    .urgency-critical { background: linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(220, 38, 38, 0.35) 100%); border: 1px solid rgba(239, 68, 68, 0.5); }
-    .urgency-urgent { background: linear-gradient(135deg, rgba(249, 115, 22, 0.2) 0%, rgba(234, 88, 12, 0.3) 100%); border: 1px solid rgba(249, 115, 22, 0.5); }
-    .urgency-soon { background: linear-gradient(135deg, rgba(245, 158, 11, 0.18) 0%, rgba(217, 119, 6, 0.28) 100%); border: 1px solid rgba(245, 158, 11, 0.5); }
-    .urgency-approaching { background: linear-gradient(135deg, rgba(234, 179, 8, 0.15) 0%, rgba(202, 138, 4, 0.25) 100%); border: 1px solid rgba(234, 179, 8, 0.5); }
-    .urgency-upcoming { background: linear-gradient(135deg, rgba(132, 204, 22, 0.15) 0%, rgba(101, 163, 13, 0.25) 100%); border: 1px solid rgba(132, 204, 22, 0.5); }
-    .urgency-future { background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(22, 163, 74, 0.25) 100%); border: 1px solid rgba(34, 197, 94, 0.5); }
-    .urgency-far { background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(37, 99, 235, 0.25) 100%); border: 1px solid rgba(59, 130, 246, 0.5); }
-    .urgency-no-deadline { background: linear-gradient(135deg, rgba(100, 116, 139, 0.15) 0%, rgba(71, 85, 105, 0.25) 100%); border: 1px solid rgba(100, 116, 139, 0.5); }
-    .completed-cube { background: var(--bg-primary); border: 1px solid rgba(34, 197, 94, 0.3); border-left: 4px solid #22c55e; border-radius: 14px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; position: relative; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-    .notion-modal { max-width: 480px; padding: 0; border-radius: 12px; overflow: hidden; }
-    .notion-title-input { width: 100%; padding: 24px 24px 12px; font-size: 1.75rem; font-weight: 700; border: none; background: transparent; color: var(--text-primary); outline: none; }
-    .notion-properties { padding: 0 24px 16px; }
-    .notion-property-row { display: flex; align-items: flex-start; padding: 10px 0; min-height: 40px; border-radius: 4px; transition: background 0.15s; }
-    .notion-property-label { display: flex; align-items: center; gap: 8px; width: 120px; flex-shrink: 0; color: var(--text-secondary); font-size: 0.9rem; }
-    .notion-select { padding: 6px 12px; border-radius: 6px; border: none; background: var(--bg-tertiary); color: var(--text-primary); font-size: 0.9rem; font-weight: 500; cursor: pointer; outline: none; appearance: none; min-width: 100px; }
-    .notion-textarea { width: 100%; min-height: 60px; padding: 8px 10px; border-radius: 6px; border: none; background: var(--bg-tertiary); color: var(--text-primary); font-size: 0.9rem; font-family: inherit; outline: none; resize: vertical; }
-    .notion-save-btn { display: flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 8px; border: none; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; font-size: 0.9rem; font-weight: 600; cursor: pointer; margin-left: auto; }
+    /* Full screen layout for assignments page - Theme Compatible */
+    .main-content {
+        padding: var(--spacing-lg) 0 !important;
+        align-items: stretch !important;
+        background: var(--bg-primary);
+        min-height: 100vh;
+    }
+
+    .content-container {
+        max-width: 100% !important;
+        width: 100%;
+        padding: 0 var(--spacing-md) !important;
+    }
+
+    /* Modern Icon Styling */
+    .mdi {
+        transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    .page-title .mdi {
+        font-size: 1.5rem;
+        margin-right: 8px;
+        background: linear-gradient(135deg, var(--color-blue) 0%, #a855f7 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .page-header {
+        padding: 0 var(--spacing-lg);
+        margin-bottom: 24px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--spacing-md);
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .page-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        letter-spacing: -0.02em;
+    }
+
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .stats-badges {
+        display: flex;
+        gap: 10px;
+    }
+
+    .stat-badge {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        color: var(--text-secondary);
+        transition: all 0.3s ease;
+    }
+
+    .stat-badge:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .stat-badge i {
+        font-size: 1.2rem;
+        transition: transform 0.3s ease;
+    }
+
+    .stat-badge:hover i {
+        transform: scale(1.15);
+    }
+
+    .stat-pending {
+        color: var(--color-orange);
+    }
+
+    .stat-pending i {
+        color: var(--color-orange);
+    }
+
+    .stat-completed {
+        color: var(--color-green);
+    }
+
+    .stat-completed i {
+        color: var(--color-green);
+    }
+
+    /* Modern Add Button */
+    .btn-add-assignment {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 22px;
+        border-radius: 14px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+    }
+
+    .btn-add-assignment:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+        background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+    }
+
+    .btn-add-assignment i {
+        font-size: 1.2rem;
+        transition: transform 0.3s ease;
+    }
+
+    .btn-add-assignment:hover i {
+        transform: rotate(90deg);
+    }
+
+    /* Kanban Board Layout - Dark Theme Compatible */
+    .kanban-board {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 20px;
+        padding: 0 var(--spacing-lg);
+        margin-bottom: var(--spacing-xl);
+        width: 100%;
+        min-height: 500px;
+    }
+
+    .kanban-column {
+        background: var(--bg-secondary);
+        border-radius: 16px;
+        border: 1px solid var(--border-color);
+        display: flex;
+        flex-direction: column;
+        min-height: 400px;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .kanban-column:hover {
+        border-color: var(--border-color-light);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    }
+
+    .kanban-column-header {
+        padding: 16px 20px;
+        border-bottom: 2px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--bg-tertiary);
+        flex-shrink: 0;
+    }
+
+    .kanban-column-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: var(--text-primary);
+    }
+
+    .kanban-column-title i {
+        font-size: 1.3rem;
+        transition: transform 0.3s ease;
+    }
+
+    .kanban-column:hover .kanban-column-title i {
+        transform: scale(1.1);
+    }
+
+    .kanban-column-count {
+        background: var(--bg-primary);
+        color: var(--text-secondary);
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        min-width: 28px;
+        text-align: center;
+    }
+
+    /* Column specific colors */
+    .kanban-column.todo .kanban-column-header {
+        border-bottom-color: var(--color-orange);
+    }
+    .kanban-column.todo .kanban-column-title i {
+        color: var(--color-orange);
+    }
+    .kanban-column.todo .kanban-column-count {
+        background: rgba(249, 115, 22, 0.15);
+        color: var(--color-orange);
+    }
+
+    .kanban-column.in-progress .kanban-column-header {
+        border-bottom-color: var(--color-primary);
+    }
+    .kanban-column.in-progress .kanban-column-title i {
+        color: var(--color-primary);
+    }
+    .kanban-column.in-progress .kanban-column-count {
+        background: rgba(79, 70, 229, 0.15);
+        color: var(--color-primary);
+    }
+
+    .kanban-column.completed .kanban-column-header {
+        border-bottom-color: var(--color-green);
+    }
+    .kanban-column.completed .kanban-column-title i {
+        color: var(--color-green);
+    }
+    .kanban-column.completed .kanban-column-count {
+        background: rgba(34, 197, 94, 0.15);
+        color: var(--color-green);
+    }
+
+    .kanban-column-body {
+        padding: var(--spacing-sm);
+        flex: 1;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    .kanban-column-body::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .kanban-column-body::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .kanban-column-body::-webkit-scrollbar-thumb {
+        background: var(--border-color);
+        border-radius: 3px;
+    }
+
+    .kanban-column-body::-webkit-scrollbar-thumb:hover {
+        background: var(--text-tertiary);
+    }
+
+    /* Empty state for columns */
+    .kanban-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: var(--spacing-xl);
+        color: var(--text-tertiary);
+        text-align: center;
+        flex: 1;
+    }
+
+    .kanban-empty i {
+        font-size: 2.5rem;
+        margin-bottom: var(--spacing-sm);
+        opacity: 0.4;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0);
+        }
+        50% { transform: translateY(-8px);
+        }
+    }
+
+    .kanban-empty p {
+        font-size: 0.85rem;
+        margin: 0;
+        opacity: 0.6;
+    }
+
+    /* Drag and drop styles */
+    .kanban-column-body.drag-over {
+        background: rgba(79, 70, 229, 0.05);
+        border: 2px dashed var(--color-primary);
+        border-radius: var(--border-radius);
+    }
+
+    .assignment-cube.dragging {
+        opacity: 0.5;
+        transform: rotate(3deg);
+    }
+
+    .card {
+        margin-left: var(--spacing-lg);
+        margin-right: var(--spacing-lg);
+    }
+
+    /* Assignment Cube - Modern Card Design */
+    .assignment-cube {
+        border-radius: 16px;
+        padding: 16px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        animation: fadeIn 0.4s ease-out backwards;
+        cursor: grab;
+        min-height: 110px;
+        height: auto;
+        border: none;
+    }
+
+    .assignment-cube:active {
+        cursor: grabbing;
+    }
+
+    /* Cube content wrapper */
+    .cube-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+        flex: 1;
+        position: relative;
+        z-index: 2;
+        gap: 10px;
+    }
+
+    /* Assignment info section */
+    .assignment-info {
+        flex: 1;
+        min-height: 0;
+    }
+
+    /* Remove old grid spans for kanban layout */
+    .span-1x1, .span-2x1, .span-1x2, .span-2x2, .span-2x3, .span-3x2 {
+        grid-column: unset;
+        grid-row: unset;
+    }
+
+    /* Mobile responsive adjustments */
+    @media (max-width: 992px) {
+        .kanban-board {
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-sm);
+        }
+        
+        .kanban-column.completed {
+            grid-column: span 2;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .kanban-board {
+            grid-template-columns: 1fr;
+            padding: 0 var(--spacing-sm);
+        }
+        
+        .kanban-column {
+            min-height: 250px;
+        }
+        
+        .kanban-column.completed {
+            grid-column: span 1;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .kanban-board {
+            padding: 0 var(--spacing-sm);
+            gap: var(--spacing-sm);
+        }
+
+        .main-content {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+
+        .page-header {
+            padding: 0 var(--spacing-md);
+            flex-direction: column;
+            align-items: flex-start;
+            gap: var(--spacing-sm);
+        }
+
+        .page-header .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .card {
+            margin-left: var(--spacing-sm);
+            margin-right: var(--spacing-sm);
+        }
+        
+        /* Smaller assignment cube padding on mobile */
+        .assignment-cube {
+            padding: 10px;
+            min-height: 100px;
+        }
+        
+        /* Smaller text on mobile */
+        .assignment-title {
+            font-size: 0.8rem;
+            -webkit-line-clamp: 2;
+            margin-bottom: 2px;
+            line-height: 1.15;
+            margin-right: 25px;
+        }
+        
+        .assignment-subject {
+            font-size: 0.7rem;
+            line-height: 1.1;
+        }
+
+        .time-remaining-large {
+            font-size: 1rem;
+            margin-bottom: 1px;
+        }
+        
+        .time-label {
+            font-size: 0.6rem;
+            letter-spacing: 0.3px;
+        }
+        
+        .cube-content {
+            gap: 4px;
+        }
+        
+        /* Smaller action buttons on mobile */
+        .action-btn {
+            width: 20px;
+            height: 20px;
+            font-size: 0.7rem;
+        }
+        
+        .assignment-actions {
+            top: 4px;
+            right: 4px;
+            gap: 2px;
+            opacity: 1; /* Always visible on mobile */
+        }
+        
+        /* Stats badges smaller on mobile */
+        .stat-badge {
+            padding: 6px 10px;
+            font-size: 0.75rem;
+        }
+        
+        .stat-badge i {
+            font-size: 0.95rem;
+        }
+        
+        .stats-badges {
+            gap: 6px;
+        }
+        
+        .header-actions {
+            gap: var(--spacing-sm);
+            width: 100%;
+            flex-wrap: wrap;
+        }
+        
+        .kanban-column-header {
+            padding: var(--spacing-sm) var(--spacing-md);
+        }
+        
+        .kanban-column-title {
+            font-size: 0.85rem;
+        }
+        
+        .kanban-column-title i {
+            font-size: 1rem;
+        }
+    }
+    
+    /* Extra small phones */
+    @media (max-width: 360px) {
+        .assignment-cube {
+            padding: 8px;
+        }
+        
+        .assignment-title {
+            font-size: 0.75rem;
+        }
+        
+        .assignment-subject {
+            font-size: 0.65rem;
+        }
+        
+        .time-remaining-large {
+            font-size: 0.9rem;
+        }
+        
+        .time-label {
+            font-size: 0.55rem;
+        }
+    }
+
+    /* Assignment cube content layout */
+    .cube-content {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        position: relative;
+        min-height: 0;
+        gap: 8px;
+    }
+    
+    .assignment-info {
+        flex: 1;
+        min-height: 0;
+    }
+
+    .assignment-cube:hover {
+        transform: translateY(-4px);
+        z-index: 5;
+    }
+
+    .assignment-cube.completed {
+        opacity: 0;
+        transform: scale(0.8);
+        pointer-events: none;
+    }
+
+    /* Typography - Clean & Modern */
+    .assignment-title {
+        font-weight: 600;
+        margin-bottom: 4px;
+        line-height: 1.35;
+        z-index: 1;
+        font-size: 0.95rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        word-break: break-word;
+        letter-spacing: -0.01em;
+    }
+
+    .assignment-subject {
+        font-size: 0.8rem;
+        font-weight: 500;
+        z-index: 1;
+        line-height: 1.3;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        opacity: 0.85;
+    }
+
+    /* Time Display - Simplified */
+    .time-container {
+        margin-top: auto;
+        padding-top: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex: 0 0 auto;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .time-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .time-remaining-large {
+        font-weight: 700;
+        line-height: 1;
+        font-size: 1.15rem;
+        letter-spacing: -0.02em;
+    }
+
+    .time-label {
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        line-height: 1.2;
+        opacity: 0.8;
+    }
+
+    /* Move to column button - Modern */
+    .move-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        border: none;
+        background: rgba(0, 0, 0, 0.25);
+        backdrop-filter: blur(8px);
+        color: rgba(255, 255, 255, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 1rem;
+    }
+
+    .move-btn:hover {
+        background: rgba(0, 0, 0, 0.4);
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Action Buttons - Minimal & Clean */
+    .assignment-actions {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        display: flex;
+        gap: 6px;
+        z-index: 10;
+        opacity: 0;
+        transition: all 0.2s ease;
+        transform: translateY(-4px);
+    }
+
+    .assignment-cube:hover .assignment-actions {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .action-btn {
+        width: 30px;
+        height: 30px;
+        border-radius: 10px;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        background: rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(8px);
+        color: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-size: 1rem;
+    }
+
+    .action-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-complete {
+        color: #86efac;
+    }
+
+    .btn-complete:hover {
+        background: var(--color-green);
+        color: white;
+        transform: scale(1.15);
+    }
+
+    .btn-complete:hover i {
+        animation: checkPop 0.3s ease;
+    }
+
+    @keyframes checkPop {
+        0%, 100% { transform: scale(1);
+        }
+        50% { transform: scale(1.3);
+        }
+    }
+
+    .btn-delete {
+        color: #fca5a5;
+    }
+
+    .btn-delete:hover {
+        background: var(--color-red);
+        color: white;
+        transform: scale(1.15);
+    }
+
+    /* Urgency indicator strip - Hidden now using full color */
+    .urgency-strip {
+        display: none;
+    }
+
+    /* ===== FULL COLOR ASSIGNMENT CONTAINERS ===== */
+    
+    /* Critical - Red (Overdue or < 6 hours) */
+    .urgency-critical {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(220, 38, 38, 0.35) 100%);
+        border: 1px solid rgba(239, 68, 68, 0.5);
+    }
+    .urgency-critical .assignment-title { color: #fecaca;
+    }
+    .urgency-critical .assignment-subject { color: #fca5a5; }
+    .urgency-critical .time-remaining-large { color: #ef4444;
+    }
+    .urgency-critical .time-label { color: #fca5a5; }
+    .urgency-critical .time-container { border-top-color: rgba(239, 68, 68, 0.3);
+    }
+    .urgency-critical:hover { 
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.35) 0%, rgba(220, 38, 38, 0.45) 100%);
+        border-color: #ef4444;
+        transform: translateY(-4px);
+        box-shadow: 0 12px 30px rgba(239, 68, 68, 0.3);
+    }
+
+    /* Urgent - Orange (< 24 hours) */
+    .urgency-urgent {
+        background: linear-gradient(135deg, rgba(249, 115, 22, 0.2) 0%, rgba(234, 88, 12, 0.3) 100%);
+        border: 1px solid rgba(249, 115, 22, 0.5);
+    }
+    .urgency-urgent .assignment-title { color: #fed7aa;
+    }
+    .urgency-urgent .assignment-subject { color: #fdba74; }
+    .urgency-urgent .time-remaining-large { color: #f97316;
+    }
+    .urgency-urgent .time-label { color: #fdba74; }
+    .urgency-urgent .time-container { border-top-color: rgba(249, 115, 22, 0.3);
+    }
+    .urgency-urgent:hover { 
+        background: linear-gradient(135deg, rgba(249, 115, 22, 0.3) 0%, rgba(234, 88, 12, 0.4) 100%);
+        border-color: #f97316;
+        transform: translateY(-4px);
+        box-shadow: 0 12px 30px rgba(249, 115, 22, 0.3);
+    }
+
+    /* Soon - Amber (< 48 hours) */
+    .urgency-soon {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.18) 0%, rgba(217, 119, 6, 0.28) 100%);
+        border: 1px solid rgba(245, 158, 11, 0.5);
+    }
+    .urgency-soon .assignment-title { color: #fde68a;
+    }
+    .urgency-soon .assignment-subject { color: #fcd34d; }
+    .urgency-soon .time-remaining-large { color: #f59e0b;
+    }
+    .urgency-soon .time-label { color: #fcd34d; }
+    .urgency-soon .time-container { border-top-color: rgba(245, 158, 11, 0.3);
+    }
+    .urgency-soon:hover { 
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.28) 0%, rgba(217, 119, 6, 0.38) 100%);
+        border-color: #f59e0b;
+        transform: translateY(-4px);
+        box-shadow: 0 12px 30px rgba(245, 158, 11, 0.3);
+    }
+
+    /* Approaching - Yellow (< 5 days) */
+    .urgency-approaching {
+        background: linear-gradient(135deg, rgba(234, 179, 8, 0.15) 0%, rgba(202, 138, 4, 0.25) 100%);
+        border: 1px solid rgba(234, 179, 8, 0.5);
+    }
+    .urgency-approaching .assignment-title { color: #fef08a;
+    }
+    .urgency-approaching .assignment-subject { color: #fde047; }
+    .urgency-approaching .time-remaining-large { color: #eab308;
+    }
+    .urgency-approaching .time-label { color: #fde047; }
+    .urgency-approaching .time-container { border-top-color: rgba(234, 179, 8, 0.3);
+    }
+    .urgency-approaching:hover { 
+        background: linear-gradient(135deg, rgba(234, 179, 8, 0.25) 0%, rgba(202, 138, 4, 0.35) 100%);
+        border-color: #eab308;
+        transform: translateY(-4px);
+        box-shadow: 0 12px 30px rgba(234, 179, 8, 0.3);
+    }
+
+    /* Upcoming - Lime (< 7 days) */
+    .urgency-upcoming {
+        background: linear-gradient(135deg, rgba(132, 204, 22, 0.15) 0%, rgba(101, 163, 13, 0.25) 100%);
+        border: 1px solid rgba(132, 204, 22, 0.5);
+    }
+    .urgency-upcoming .assignment-title { color: #d9f99d;
+    }
+    .urgency-upcoming .assignment-subject { color: #bef264; }
+    .urgency-upcoming .time-remaining-large { color: #84cc16;
+    }
+    .urgency-upcoming .time-label { color: #bef264; }
+    .urgency-upcoming .time-container { border-top-color: rgba(132, 204, 22, 0.3);
+    }
+    .urgency-upcoming:hover { 
+        background: linear-gradient(135deg, rgba(132, 204, 22, 0.25) 0%, rgba(101, 163, 13, 0.35) 100%);
+        border-color: #84cc16;
+        transform: translateY(-4px);
+        box-shadow: 0 12px 30px rgba(132, 204, 22, 0.3);
+    }
+
+    /* Future - Green (< 14 days) */
+    .urgency-future {
+        background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(22, 163, 74, 0.25) 100%);
+        border: 1px solid rgba(34, 197, 94, 0.5);
+    }
+    .urgency-future .assignment-title { color: #bbf7d0;
+    }
+    .urgency-future .assignment-subject { color: #86efac; }
+    .urgency-future .time-remaining-large { color: #22c55e;
+    }
+    .urgency-future .time-label { color: #86efac; }
+    .urgency-future .time-container { border-top-color: rgba(34, 197, 94, 0.3);
+    }
+    .urgency-future:hover { 
+        background: linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(22, 163, 74, 0.35) 100%);
+        border-color: #22c55e;
+        transform: translateY(-4px);
+        box-shadow: 0 12px 30px rgba(34, 197, 94, 0.3);
+    }
+
+    /* Far - Blue (> 14 days) */
+    .urgency-far {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(37, 99, 235, 0.25) 100%);
+        border: 1px solid rgba(59, 130, 246, 0.5);
+    }
+    .urgency-far .assignment-title { color: #bfdbfe;
+    }
+    .urgency-far .assignment-subject { color: #93c5fd; }
+    .urgency-far .time-remaining-large { color: #3b82f6;
+    }
+    .urgency-far .time-label { color: #93c5fd; }
+    .urgency-far .time-container { border-top-color: rgba(59, 130, 246, 0.3);
+    }
+    .urgency-far:hover { 
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.25) 0%, rgba(37, 99, 235, 0.35) 100%);
+        border-color: #3b82f6;
+        transform: translateY(-4px);
+        box-shadow: 0 12px 30px rgba(59, 130, 246, 0.3);
+    }
+
+    /* No Deadline - Neutral Gray */
+    .urgency-no-deadline {
+        background: linear-gradient(135deg, rgba(100, 116, 139, 0.15) 0%, rgba(71, 85, 105, 0.25) 100%);
+        border: 1px solid rgba(100, 116, 139, 0.5);
+    }
+    .urgency-no-deadline .assignment-title { color: #e2e8f0;
+    }
+    .urgency-no-deadline .assignment-subject { color: #cbd5e1; }
+    .urgency-no-deadline .time-remaining-large { color: #94a3b8;
+    }
+    .urgency-no-deadline .time-label { color: #94a3b8; }
+    .urgency-no-deadline .time-container { border-top-color: rgba(100, 116, 139, 0.3);
+    }
+    .urgency-no-deadline:hover { 
+        background: linear-gradient(135deg, rgba(100, 116, 139, 0.25) 0%, rgba(71, 85, 105, 0.35) 100%);
+        border-color: #64748b;
+        transform: translateY(-4px);
+        box-shadow: 0 12px 30px rgba(100, 116, 139, 0.3);
+    }
+
+    /* Subtle pulse for critical */
+    @keyframes subtlePulse {
+        0%, 100% { box-shadow: 0 2px 8px rgba(239, 68, 68, 0.1);
+        }
+        50% { box-shadow: 0 4px 20px rgba(239, 68, 68, 0.25);
+        }
+    }
+
+    .urgency-critical {
+        animation: subtlePulse 3s ease-in-out infinite;
+    }
+
+    .urgency-critical:hover {
+        animation: none;
+    }
+
+    /* Completed Items - Dark Theme Compatible */
+    .completed-cube {
+        background: var(--bg-primary);
+        border: 1px solid rgba(34, 197, 94, 0.3);
+        border-left: 4px solid #22c55e;
+        border-radius: 14px;
+        padding: 14px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        position: relative;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .completed-cube:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(34, 197, 94, 0.15);
+        border-color: #22c55e;
+    }
+
+    .completed-cube .assignment-title {
+        color: var(--text-primary);
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .completed-cube .assignment-subject {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        opacity: 0.8;
+    }
+
+    .completed-cube .completed-date {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.72rem;
+        color: #22c55e;
+        margin-top: 4px;
+        font-weight: 500;
+    }
+
+    .completed-cube .completed-date i {
+        font-size: 0.85rem;
+    }
+
+    .completed-cube .delete-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 24px;
+        height: 24px;
+        border-radius: 8px;
+        border: none;
+        background: var(--bg-tertiary);
+        color: var(--text-tertiary);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: all 0.2s;
+        font-size: 0.8rem;
+    }
+
+    .completed-cube:hover .delete-btn {
+        opacity: 1;
+    }
+
+    .completed-cube .delete-btn:hover {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--color-red);
+    }
+
+    /* See More Button */
+    #seeMoreBtn {
+        margin-top: var(--spacing-sm);
+        width: 100%;
+        padding: var(--spacing-sm);
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+
+    #seeMoreBtn:hover {
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        border-color: var(--color-primary);
+    }
+
+    /* Fade In Animation */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ===== NOTION-STYLE MODAL ===== */
+    .notion-modal {
+        max-width: 480px;
+        padding: 0;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .notion-modal .modal-close {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        border: none;
+        background: transparent;
+        color: var(--text-tertiary);
+        font-size: 1.5rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+        z-index: 10;
+    }
+
+    .notion-modal .modal-close:hover {
+        background: var(--bg-hover);
+        color: var(--text-primary);
+    }
+
+    /* Notion Title Input */
+    .notion-title-input {
+        width: 100%;
+        padding: 24px 24px 12px;
+        font-size: 1.75rem;
+        font-weight: 700;
+        border: none;
+        background: transparent;
+        color: var(--text-primary);
+        outline: none;
+    }
+
+    .notion-title-input::placeholder {
+        color: var(--text-tertiary);
+    }
+
+    /* Notion Properties */
+    .notion-properties {
+        padding: 0 24px 16px;
+    }
+
+    .notion-property-row {
+        display: flex;
+        align-items: flex-start;
+        padding: 10px 0;
+        min-height: 40px;
+        border-radius: 4px;
+        transition: background 0.15s;
+    }
+
+    .notion-property-row:hover {
+        background: var(--bg-hover);
+        margin: 0 -8px;
+        padding: 10px 8px;
+    }
+
+    .notion-property-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 120px;
+        flex-shrink: 0;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+
+    .notion-property-label i {
+        font-size: 1.1rem;
+        opacity: 0.7;
+    }
+
+    .notion-property-value {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+    }
+
+    /* Notion Select */
+    .notion-select {
+        padding: 6px 12px;
+        border-radius: 6px;
+        border: none;
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        outline: none;
+        transition: all 0.2s;
+        appearance: none;
+        min-width: 100px;
+    }
+
+    .notion-select:hover {
+        background: var(--bg-hover);
+    }
+
+    .notion-select:focus {
+        box-shadow: 0 0 0 2px var(--color-primary);
+    }
+
+    .notion-select option {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+    }
+
+    /* Priority colors in select */
+    .notion-select[id="assignmentPriority"] option[value="high"] { color: #ef4444;
+    }
+    .notion-select[id="assignmentPriority"] option[value="normal"] { color: #eab308; }
+    .notion-select[id="assignmentPriority"] option[value="low"] { color: #64748b;
+    }
+
+    /* Status select styling */
+    .notion-status-select {
+        background: rgba(99, 102, 241, 0.15);
+        color: var(--color-primary);
+        border-radius: 20px;
+        padding: 4px 14px;
+    }
+
+    /* Notion Date Wrapper */
+    .notion-date-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .notion-date-input,
+    .notion-time-input {
+        padding: 6px 10px;
+        border-radius: 6px;
+        border: none;
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        font-size: 0.85rem;
+        outline: none;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .notion-date-input:hover,
+    .notion-time-input:hover {
+        background: var(--bg-hover);
+    }
+
+    .notion-date-input:focus,
+    .notion-time-input:focus {
+        box-shadow: 0 0 0 2px var(--color-primary);
+    }
+
+    .notion-date-input::-webkit-calendar-picker-indicator,
+    .notion-time-input::-webkit-calendar-picker-indicator {
+        filter: invert(0.7);
+        cursor: pointer;
+    }
+
+    .notion-clear-date {
+        width: 24px;
+        height: 24px;
+        border-radius: 4px;
+        border: none;
+        background: transparent;
+        color: var(--text-tertiary);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+    }
+
+    .notion-clear-date:hover {
+        background: rgba(239, 68, 68, 0.15);
+        color: var(--color-red);
+    }
+
+    .notion-empty-value {
+        color: var(--text-tertiary);
+        font-size: 0.9rem;
+        display: none;
+    }
+
+    .notion-empty-value.visible {
+        display: inline;
+    }
+
+    /* Notion Textarea */
+    .notion-textarea {
+        width: 100%;
+        min-height: 60px;
+        padding: 8px 10px;
+        border-radius: 6px;
+        border: none;
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        font-size: 0.9rem;
+        font-family: inherit;
+        outline: none;
+        resize: vertical;
+        transition: all 0.2s;
+    }
+
+    .notion-textarea:hover {
+        background: var(--bg-hover);
+    }
+
+    .notion-textarea:focus {
+        box-shadow: 0 0 0 2px var(--color-primary);
+    }
+
+    .notion-textarea::placeholder {
+        color: var(--text-tertiary);
+    }
+
+    .notion-notes-row {
+        align-items: flex-start;
+    }
+
+    .notion-notes-row .notion-property-label {
+        padding-top: 8px;
+    }
+
+    .notion-notes-row .notion-property-value {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    /* Notion Quick Options */
+    .notion-quick-options {
+        display: flex;
+        gap: 8px;
+        padding: 12px 24px;
+        border-top: 1px solid var(--border-color);
+        flex-wrap: wrap;
+    }
+
+    .notion-quick-btn {
+        padding: 6px 14px;
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+        background: transparent;
+        color: var(--text-secondary);
+        font-size: 0.8rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .notion-quick-btn:hover {
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+        background: rgba(99, 102, 241, 0.1);
+    }
+
+    .notion-quick-btn.active {
+        background: var(--color-primary);
+        border-color: var(--color-primary);
+        color: white;
+    }
+
+    .notion-no-deadline {
+        border-color: var(--text-tertiary);
+    }
+
+    .notion-no-deadline:hover,
+    .notion-no-deadline.active {
+        border-color: #64748b;
+        background: rgba(100, 116, 139, 0.2);
+        color: var(--text-primary);
+    }
+
+    /* Notion Modal Actions */
+    .notion-modal-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 24px 24px;
+        border-top: 1px solid var(--border-color);
+        background: var(--bg-tertiary);
+    }
+
+    .notion-save-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: none;
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        color: white;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-left: auto;
+    }
+
+    .notion-save-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    }
+
+    .notion-delete-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        border-radius: 8px;
+        border: none;
+        background: transparent;
+        color: var(--color-red);
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .notion-delete-btn:hover {
+        background: rgba(239, 68, 68, 0.15);
+    }
+
+    /* Priority badge styles for display */
+    .priority-badge-display {
+        padding: 4px 12px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .priority-high-badge {
+        background: rgba(239, 68, 68, 0.15);
+        color: #ef4444;
+    }
+
+    .priority-normal-badge {
+        background: rgba(234, 179, 8, 0.15);
+        color: #eab308;
+    }
+
+    .priority-low-badge {
+        background: rgba(100, 116, 139, 0.15);
+        color: #64748b;
+    }
+
+    .form-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 500;
+        color: var(--text-primary);
+        margin-bottom: 6px;
+    }
+
+    .form-label i {
+        color: var(--text-tertiary);
+        font-size: 1rem;
+    }
+
+    .form-input, .form-textarea, .form-select {
+        border-radius: 10px;
+        border: 1.5px solid var(--border-color);
+        padding: 12px 14px;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+    }
+
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        outline: none;
+        background: var(--bg-secondary);
+    }
+
+    .form-input::placeholder, .form-textarea::placeholder {
+        color: var(--text-tertiary);
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-md);
+    }
+
+    @media (max-width: 480px) {
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .time-hint {
+        font-size: 0.75rem;
+        color: var(--color-red);
+        margin-top: 4px;
+        min-height: 18px;
+    }
+
+    .quick-time-options {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 16px;
+        flex-wrap: wrap;
+    }
+
+    .quick-label {
+        font-size: 0.8rem;
+        color: var(--text-tertiary);
+        font-weight: 500;
+        width: 100%;
+        margin-bottom: 4px;
+    }
+
+    .quick-time-btn {
+        padding: 8px 14px;
+        border-radius: 10px;
+        border: 1.5px solid var(--border-color);
+        background: var(--bg-primary);
+        color: var(--text-secondary);
+        font-size: 0.8rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .quick-time-btn:hover {
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+        background: rgba(99, 102, 241, 0.1);
+    }
+
+    .quick-time-btn.active {
+        border-color: var(--color-primary);
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        color: white;
+    }
+
+    .quick-time-btn.no-deadline-btn {
+        background: var(--bg-tertiary);
+        border-color: var(--border-color);
+        color: var(--text-secondary);
+    }
+
+    .quick-time-btn.no-deadline-btn:hover,
+    .quick-time-btn.no-deadline-btn.active {
+        background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+        color: white;
+        border-color: #a855f7;
+    }
+
+    /* Optional label styling */
+    .optional-label {
+        font-size: 0.72rem;
+        color: var(--text-tertiary);
+        font-weight: 500;
+        background: var(--bg-tertiary);
+        padding: 2px 8px;
+        border-radius: 4px;
+        margin-left: 6px;
+    }
+
+    /* Textarea styling */
+    .form-textarea {
+        resize: vertical;
+        min-height: 80px;
+        font-family: inherit;
+    }
+
+    /* Select styling */
+    .form-select {
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        padding-right: 36px;
+    }
+
+    .form-select option {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+    }
+
+    /* Priority badge in cube */
+    .priority-badge {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.65rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        z-index: 2;
+        opacity: 0.9;
+        display: inline-block;
+    }
+
+    .priority-high {
+        background: rgba(239, 68, 68, 0.2);
+        color: #dc2626;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .priority-normal {
+        background: rgba(59, 130, 246, 0.2);
+        color: #2563eb;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .priority-low {
+        background: rgba(107, 114, 128, 0.2);
+        color: #4b5563;
+        border: 1px solid rgba(107, 114, 128, 0.3);
+    }
+
+    /* Has description indicator - Hidden for cleaner look */
+    .has-description-indicator {
+        display: none;
+    }
+
+    /* View modal styles */
+    .view-modal-content {
+        background: var(--bg-tertiary);
+        border-radius: 14px;
+        padding: 20px;
+    }
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .detail-row:last-child {
+        border-bottom: none;
+    }
+
+    .detail-row.description-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+
+    .detail-label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+    }
+
+    .detail-label i {
+        font-size: 1rem;
+        color: var(--text-tertiary);
+    }
+
+    .detail-value {
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .detail-description {
+        color: var(--text-primary);
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin: 0;
+        white-space: pre-wrap;
+        word-break: break-word;
+    }
+
+    /* Has description indicator */
+    .has-description-indicator {
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        color: var(--text-tertiary);
+        font-size: 0.8rem;
+        opacity: 0.7;
+        z-index: 2;
+    }
+
+    /* Improved Form Group Styling */
+    .form-group {
+        margin-bottom: var(--spacing-md);
+    }
+
+    .form-group:last-of-type {
+        margin-bottom: 0;
+    }
+
+    .form-input[readonly] {
+        background: var(--bg-tertiary);
+        color: var(--text-secondary);
+        cursor: not-allowed;
+    }
+
+    /* Mobile responsive for header */
+    @media (max-width: 768px) {
+        .stats-badges {
+            display: none;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .header-actions {
+            width: 100%;
+        }
+        
+        .modal {
+            margin: var(--spacing-sm);
+            padding: var(--spacing-md);
+        }
+        
+        .modal-header-content {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: var(--spacing-sm);
+        }
+        
+        .modal-icon {
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+        }
+    }
 </style>
 {% endblock %}
 
@@ -89,7 +1643,7 @@
     <div class="page-header flex-between">
         <div>
             <h1 class="page-title"><i class="mdi mdi-clipboard-text-outline"></i> 과제 관리</h1>
-            <p class="page-subtitle" style="margin-bottom: 0.5rem;">과제를 해결할 시간입니다!</p>
+            <p class="page-subtitle" style="margin-bottom: 0.5rem;" data-dynamic-greeting="assignments">{{ greeting }}</p>
             <p class="page-subtitle" style="color: var(--text-tertiary); font-size: 0.9rem;">칸반 보드로 마감 기한을 관리하세요.</p>
         </div>
         <div class="header-actions">
@@ -116,7 +1670,8 @@
                 </div>
                 <span class="kanban-column-count" id="todoCount">0</span>
             </div>
-            <div class="kanban-column-body" id="todoColumn" data-status="todo"></div>
+            <div class="kanban-column-body" id="todoColumn" data-status="todo">
+                </div>
         </div>
 
         <div class="kanban-column in-progress">
@@ -127,7 +1682,8 @@
                 </div>
                 <span class="kanban-column-count" id="inProgressCount">0</span>
             </div>
-            <div class="kanban-column-body" id="inProgressColumn" data-status="in_progress"></div>
+            <div class="kanban-column-body" id="inProgressColumn" data-status="in_progress">
+                </div>
         </div>
 
         <div class="kanban-column completed">
@@ -148,13 +1704,13 @@
                     <div class="assignment-subject">{{ assignment.subject }}</div>
                     <div class="completed-date">
                         <i class="mdi mdi-check-circle"></i>
-                        <span>{{ assignment.completed_at|date:"Y년 m월 d일" }}</span>
+                        <span>{{ assignment.completed_at|date:"M d, Y" }}</span>
                     </div>
                 </div>
                 {% empty %}
                 <div class="kanban-empty" id="completedEmpty">
                     <i class="mdi mdi-checkbox-marked-circle-outline"></i>
-                    <p>완료된 과제가 아직 없습니다</p>
+                    <p>완료된 과제가 없습니다</p>
                 </div>
                 {% endfor %}
                 <button id="seeMoreBtn" style="display: none;">
@@ -168,10 +1724,15 @@
 <div class="modal-overlay" id="addModal">
     <div class="modal notion-modal">
         <button class="modal-close" id="closeModalBtn">&times;</button>
+        
         <input type="text" id="assignmentTitle" class="notion-title-input" placeholder="제목 없는 과제" required>
+        
         <div class="notion-properties">
             <div class="notion-property-row">
-                <div class="notion-property-label"><i class="mdi mdi-flag-outline"></i><span>우선순위</span></div>
+                <div class="notion-property-label">
+                    <i class="mdi mdi-flag-outline"></i>
+                    <span>우선순위</span>
+                </div>
                 <div class="notion-property-value">
                     <select id="assignmentPriority" class="notion-select">
                         <option value="low">낮음</option>
@@ -180,8 +1741,12 @@
                     </select>
                 </div>
             </div>
+
             <div class="notion-property-row">
-                <div class="notion-property-label"><i class="mdi mdi-checkbox-marked-circle-outline"></i><span>상태</span></div>
+                <div class="notion-property-label">
+                    <i class="mdi mdi-checkbox-marked-circle-outline"></i>
+                    <span>상태</span>
+                </div>
                 <div class="notion-property-value">
                     <select id="assignmentStatus" class="notion-select notion-status-select">
                         <option value="todo">할 일</option>
@@ -189,32 +1754,51 @@
                     </select>
                 </div>
             </div>
+
             <div class="notion-property-row notion-notes-row">
-                <div class="notion-property-label"><i class="mdi mdi-text"></i><span>메모</span></div>
+                <div class="notion-property-label">
+                    <i class="mdi mdi-text"></i>
+                    <span>메모</span>
+                </div>
                 <div class="notion-property-value">
                     <textarea id="assignmentDescription" class="notion-textarea" placeholder="메모 추가..."></textarea>
                 </div>
             </div>
+
             <div class="notion-property-row">
-                <div class="notion-property-label"><i class="mdi mdi-calendar-outline"></i><span>마감 기한</span></div>
+                <div class="notion-property-label">
+                    <i class="mdi mdi-calendar-outline"></i>
+                    <span>마감 기한</span>
+                </div>
                 <div class="notion-property-value">
                     <div class="notion-date-wrapper">
                         <input type="date" id="assignmentDeadline" class="notion-date-input">
                         <input type="time" id="assignmentTime" class="notion-time-input" value="23:59">
-                        <button type="button" class="notion-clear-date" id="clearDeadlineBtn" title="기한 삭제"><i class="mdi mdi-close"></i></button>
+                        <button type="button" class="notion-clear-date" id="clearDeadlineBtn" title="기한 삭제">
+                            <i class="mdi mdi-close"></i>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="notion-quick-options">
             <button type="button" class="notion-quick-btn" data-days="0">오늘</button>
             <button type="button" class="notion-quick-btn" data-days="1">내일</button>
             <button type="button" class="notion-quick-btn" data-days="7">다음 주</button>
             <button type="button" class="notion-quick-btn notion-no-deadline" data-no-deadline="true">기한 없음</button>
         </div>
+
+        <input type="hidden" id="editAssignmentId" value="">
+        <input type="hidden" id="assignmentAssignedDate">
+
         <div class="notion-modal-actions">
-            <button type="button" id="deleteAssignmentBtn" class="notion-delete-btn" style="display: none;"><i class="mdi mdi-trash-can-outline"></i> 삭제</button>
-            <button type="button" id="saveAssignmentBtn" class="notion-save-btn"><i class="mdi mdi-check"></i> <span id="saveButtonText">과제 추가</span></button>
+            <button type="button" id="deleteAssignmentBtn" class="notion-delete-btn" style="display: none;">
+                <i class="mdi mdi-trash-can-outline"></i> 삭제
+            </button>
+            <button type="button" id="saveAssignmentBtn" class="notion-save-btn">
+                <i class="mdi mdi-check"></i> <span id="saveButtonText">과제 추가</span>
+            </button>
         </div>
     </div>
 </div>
@@ -222,8 +1806,10 @@
 
 {% block extra_js %}
 <script>
-    // 자바스크립트 로직 및 텍스트 한글화
+    // Assignment data from Django
     let assignments = {{ assignments_json|safe }};
+
+    // Elements
     const todoColumn = document.getElementById('todoColumn');
     const inProgressColumn = document.getElementById('inProgressColumn');
     const completedColumn = document.getElementById('completedColumn');
@@ -234,219 +1820,902 @@
     const timeInput = document.getElementById('assignmentTime');
     const saveBtn = document.getElementById('saveAssignmentBtn');
     const deleteBtn = document.getElementById('deleteAssignmentBtn');
-    const csrf = '{{ csrf_token }}';
 
+    // Track if we're in edit mode
     let isEditMode = false;
     let currentEditId = null;
 
+    // Setup Date Input Min Value (Prevent Past Dates)
+    function setupDateValidation() {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+
+        dateInput.min = `${yyyy}-${mm}-${dd}`;
+        // Don't set default date - allow users to have no deadline
+    }
+
+    // Open modal for adding new assignment
     function openAddModal() {
         isEditMode = false;
         currentEditId = null;
+        
+        // Reset form
         document.getElementById('assignmentTitle').value = '';
         document.getElementById('assignmentDescription').value = '';
         document.getElementById('assignmentPriority').value = 'normal';
         document.getElementById('assignmentStatus').value = 'todo';
         dateInput.value = '';
         timeInput.value = '23:59';
+        document.getElementById('editAssignmentId').value = '';
+
+        // Update UI
         document.getElementById('saveButtonText').textContent = '과제 추가';
         deleteBtn.style.display = 'none';
-        dateInput.style.display = 'none';
-        timeInput.style.display = 'none';
+
+        // Set up minimum date validation (without setting default date)
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        dateInput.min = `${yyyy}-${mm}-${dd}`;
+
+        // Reset quick buttons - activate "No Deadline" by default
         document.querySelectorAll('.notion-quick-btn').forEach(b => b.classList.remove('active'));
         document.querySelector('.notion-no-deadline').classList.add('active');
+        
+        // Hide date and time inputs by default (since "No Deadline" is selected)
+        dateInput.style.display = 'none';
+        timeInput.style.display = 'none';
+        
         addModal.classList.add('active');
         document.getElementById('assignmentTitle').focus();
     }
 
+    // Open modal for editing existing assignment
     function openEditModal(assignment) {
         isEditMode = true;
         currentEditId = assignment.id;
+        
+        // Populate form with assignment data
         document.getElementById('assignmentTitle').value = assignment.title || '';
         document.getElementById('assignmentDescription').value = assignment.description || '';
         document.getElementById('assignmentPriority').value = assignment.priority || 'normal';
         document.getElementById('assignmentStatus').value = assignment.status || 'todo';
+        document.getElementById('editAssignmentId').value = assignment.id;
+
+        // Parse deadline
         if (assignment.deadline) {
             const deadline = new Date(assignment.deadline);
-            dateInput.value = deadline.toISOString().split('T')[0];
-            timeInput.value = deadline.toTimeString().slice(0, 5);
+            const yyyy = deadline.getFullYear();
+            const mm = String(deadline.getMonth() + 1).padStart(2, '0');
+            const dd = String(deadline.getDate()).padStart(2, '0');
+            const hh = String(deadline.getHours()).padStart(2, '0');
+            const min = String(deadline.getMinutes()).padStart(2, '0');
+            
+            dateInput.value = `${yyyy}-${mm}-${dd}`;
+            timeInput.value = `${hh}:${min}`;
+            
+            // Show date and time inputs since assignment has a deadline
             dateInput.style.display = 'block';
             timeInput.style.display = 'block';
         } else {
             dateInput.value = '';
+            timeInput.value = '23:59';
+            
+            // Hide date and time inputs since assignment has no deadline
             dateInput.style.display = 'none';
             timeInput.style.display = 'none';
         }
+        
+        // Update UI
         document.getElementById('saveButtonText').textContent = '변경 사항 저장';
         deleteBtn.style.display = 'flex';
+        
+        // Reset quick buttons - activate appropriate button based on deadline
+        document.querySelectorAll('.notion-quick-btn').forEach(b => b.classList.remove('active'));
+        if (!assignment.deadline) {
+            document.querySelector('.notion-no-deadline').classList.add('active');
+        }
+        
         addModal.classList.add('active');
     }
 
-    function closeModal() { addModal.classList.remove('active'); }
+    // Close modal
+    function closeModal() {
+        addModal.classList.remove('active');
+        isEditMode = false;
+        currentEditId = null;
+    }
 
+    // Event Listeners
     addAssignmentBtn.addEventListener('click', openAddModal);
     closeModalBtn.addEventListener('click', closeModal);
-    
+
+    // Close on overlay click
+    addModal.addEventListener('click', (e) => {
+        if (e.target === addModal) {
+            closeModal();
+        }
+    });
+
+    // Clear deadline button
     document.getElementById('clearDeadlineBtn').addEventListener('click', () => {
         dateInput.value = '';
         timeInput.value = '23:59';
         document.querySelectorAll('.notion-quick-btn').forEach(b => b.classList.remove('active'));
         document.querySelector('.notion-no-deadline').classList.add('active');
+        // Hide date and time inputs when no deadline is selected
         dateInput.style.display = 'none';
         timeInput.style.display = 'none';
     });
 
+    // Quick date buttons
     document.querySelectorAll('.notion-quick-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.notion-quick-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
+            
             if (btn.dataset.noDeadline) {
                 dateInput.value = '';
+                // Hide date and time inputs when no deadline is selected
                 dateInput.style.display = 'none';
                 timeInput.style.display = 'none';
             } else {
+                // Show date and time inputs when a deadline option is selected
                 dateInput.style.display = 'block';
                 timeInput.style.display = 'block';
+                
+                const days = parseInt(btn.dataset.days);
                 const date = new Date();
-                date.setDate(date.getDate() + parseInt(btn.dataset.days));
-                dateInput.value = date.toISOString().split('T')[0];
+                date.setDate(date.getDate() + days);
+                
+                const yyyy = date.getFullYear();
+                const mm = String(date.getMonth() + 1).padStart(2, '0');
+                const dd = String(date.getDate()).padStart(2, '0');
+                dateInput.value = `${yyyy}-${mm}-${dd}`;
             }
         });
     });
 
+    // Priority select color update
+    const prioritySelect = document.getElementById('assignmentPriority');
+    function updatePriorityColor() {
+        const value = prioritySelect.value;
+        if (value === 'high') {
+            prioritySelect.style.background = 'rgba(239, 68, 68, 0.15)';
+            prioritySelect.style.color = '#ef4444';
+        } else if (value === 'normal') {
+            prioritySelect.style.background = 'rgba(234, 179, 8, 0.15)';
+            prioritySelect.style.color = '#eab308';
+        } else {
+            prioritySelect.style.background = 'rgba(100, 116, 139, 0.15)';
+            prioritySelect.style.color = '#94a3b8';
+        }
+    }
+    prioritySelect.addEventListener('change', updatePriorityColor);
+    updatePriorityColor();
+
+    // Save button click
     saveBtn.addEventListener('click', async () => {
         const title = document.getElementById('assignmentTitle').value.trim();
-        if (!title) { alert('과제 제목을 입력해 주세요.'); return; }
+        if (!title) {
+            alert('과제 제목을 입력해 주세요.');
+            document.getElementById('assignmentTitle').focus();
+            return;
+        }
 
-        const deadline = dateInput.value ? `${dateInput.value}T${timeInput.value}` : null;
+        const dateVal = dateInput.value;
+        const timeVal = timeInput.value || '23:59';
+        
+        // Deadline is optional - only set if date is provided
+        let deadline = null;
+        if (dateVal && dateVal.trim() !== '') {
+            deadline = `${dateVal}T${timeVal}`;
+        }
+
         const formData = {
-            title,
-            description: document.getElementById('assignmentDescription').value,
-            priority: document.getElementById('assignmentPriority').value,
-            deadline,
-            status: document.getElementById('assignmentStatus').value
+            title: title,
+            description: document.getElementById('assignmentDescription').value || '',
+            priority: document.getElementById('assignmentPriority').value || 'normal',
+            deadline: deadline,
+            status: document.getElementById('assignmentStatus').value || 'todo'
         };
 
+        // Debug logging for assignment creation
+        console.log('Creating assignment with data:', formData);
+        console.log('Deadline value:', deadline);
+
         try {
-            const url = isEditMode ? `/api/assignment/${currentEditId}/update/` : "{% url 'add_assignment' %}";
+            let url, method;
+            if (isEditMode && currentEditId) {
+                url = `/api/assignment/${currentEditId}/update/`;
+                method = 'POST';
+            } else {
+                url = "{% url 'add_assignment' %}";
+                method = 'POST';
+            }
+
             const response = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrf },
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrf
+                },
                 body: JSON.stringify(formData)
             });
+
             const data = await response.json();
-            if (data.success) { location.reload(); } else { alert('오류가 발생했습니다: ' + data.error); }
-        } catch (e) { alert('과제 저장 중 오류가 발생했습니다.'); }
+            console.log('Server response:', data);
+
+            if (data.success) {
+                if (isEditMode) {
+                    // Update existing assignment in array
+                    const index = assignments.findIndex(a => a.id === currentEditId);
+                    if (index !== -1) {
+                        assignments[index] = { ...assignments[index], ...data.assignment };
+                    }
+                } else {
+                    // Add new assignment
+                    data.assignment.status = formData.status;
+                    assignments.push(data.assignment);
+                }
+                renderKanban();
+                closeModal();
+            } else {
+                console.error('Server error:', data.error);
+                alert('과제 저장 오류: ' + (data.error || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
+            alert('과제를 저장하는 중 오류가 발생했습니다. 다시 시도해 주세요.');
+        }
     });
 
+    // Delete button click (in edit mode)
+    deleteBtn.addEventListener('click', async () => {
+        if (!isEditMode || !currentEditId) return;
+
+        try {
+            const response = await fetch(`/api/assignment/delete/${currentEditId}/`, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': csrf }
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                assignments = assignments.filter(a => a.id !== currentEditId);
+                renderKanban();
+                closeModal();
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    });
+
+    // Render Kanban Board
     function renderKanban() {
+        // Clear columns (except completed which is server-rendered initially)
         todoColumn.innerHTML = '';
         inProgressColumn.innerHTML = '';
-        const todoList = assignments.filter(a => a.status === 'todo' || !a.status);
-        const progressList = assignments.filter(a => a.status === 'in_progress');
 
-        if (todoList.length === 0) {
-            todoColumn.innerHTML = '<div class="kanban-empty"><i class="mdi mdi-clipboard-check-outline"></i><p>할 일이 없습니다</p></div>';
+        // Separate assignments by status
+        const todoAssignments = assignments.filter(a => a.status === 'todo' || !a.status);
+        const inProgressAssignments = assignments.filter(a => a.status === 'in_progress');
+
+        // Sort by urgency (most urgent first), null deadlines go last
+        todoAssignments.sort((a, b) => {
+            const hoursA = calculateHoursRemaining(a.deadline);
+            const hoursB = calculateHoursRemaining(b.deadline);
+            
+            // Handle null deadlines - put them last
+            if (hoursA === null && hoursB === null) return 0;
+            if (hoursA === null) return 1;
+            if (hoursB === null) return -1;
+            
+            return hoursA - hoursB;
+        });
+
+        inProgressAssignments.sort((a, b) => {
+            const hoursA = calculateHoursRemaining(a.deadline);
+            const hoursB = calculateHoursRemaining(b.deadline);
+            
+            // Handle null deadlines - put them last
+            if (hoursA === null && hoursB === null) return 0;
+            if (hoursA === null) return 1;
+            if (hoursB === null) return -1;
+            
+            return hoursA - hoursB;
+        });
+
+        // Render To Do
+        if (todoAssignments.length === 0) {
+            todoColumn.innerHTML = `
+                <div class="kanban-empty">
+                    <i class="mdi mdi-clipboard-check-outline"></i>
+                    <p>할 일이 없습니다</p>
+                </div>
+            `;
         } else {
-            todoList.forEach((a, i) => todoColumn.appendChild(createAssignmentCube(a, i, 'todo')));
+            todoAssignments.forEach((assignment, index) => {
+                const cube = createAssignmentCube(assignment, index, 'todo');
+                todoColumn.appendChild(cube);
+            });
         }
 
-        if (progressList.length === 0) {
-            inProgressColumn.innerHTML = '<div class="kanban-empty"><i class="mdi mdi-progress-clock"></i><p>진행 중인 과제가 없습니다</p></div>';
+        // Render In Progress
+        if (inProgressAssignments.length === 0) {
+            inProgressColumn.innerHTML = `
+                <div class="kanban-empty">
+                    <i class="mdi mdi-progress-clock"></i>
+                    <p>진행 중인 과제가 없습니다</p>
+                </div>
+            `;
         } else {
-            progressList.forEach((a, i) => inProgressColumn.appendChild(createAssignmentCube(a, i, 'in_progress')));
+            inProgressAssignments.forEach((assignment, index) => {
+                const cube = createAssignmentCube(assignment, index, 'in_progress');
+                inProgressColumn.appendChild(cube);
+            });
         }
+
+        // Update counts
         updateKanbanCounts();
+
+        // Setup drag and drop
+        setupDragAndDrop();
     }
 
-    function createAssignmentCube(a, index, status) {
+    // Create assignment cube element
+    function createAssignmentCube(assignment, index, status) {
         const cube = document.createElement('div');
-        const hours = calculateHoursRemaining(a.deadline);
-        cube.className = `assignment-cube ${getUrgencyClass(hours)}`;
-        cube.onclick = () => openEditModal(a);
-        
-        const priorityLabels = { 'low': '낮음', 'normal': '보통', 'high': '높음' };
-        const nextAction = status === 'todo' ? '진행 중으로 이동' : '완료로 표시';
+        const hoursRemaining = calculateHoursRemaining(assignment.deadline);
+        const urgencyClass = getUrgencyClass(hoursRemaining);
+
+        cube.className = `assignment-cube ${urgencyClass}`;
+        cube.dataset.id = assignment.id;
+        cube.dataset.hours = hoursRemaining;
+        cube.dataset.status = status;
+        cube.draggable = true;
+        cube.style.animationDelay = `${index * 0.05}s`;
+
+        const nextStatus = status === 'todo' ? 'in_progress' : 'completed';
         const nextIcon = status === 'todo' ? 'mdi-arrow-right' : 'mdi-check';
+        const nextTitle = status === 'todo' ? '진행 중으로 이동' : '완료로 표시';
+
+        // Priority badge
+        const priority = assignment.priority || 'normal';
+        const priorityMap = {'low': '낮음', 'normal': '보통', 'high': '높음'};
+        const priorityLabel = priorityMap[priority] || priority;
+        
+        // Description indicator
+        const hasDescription = assignment.description && assignment.description.trim() !== '';
 
         cube.innerHTML = `
-            <span class="priority-badge priority-${a.priority || 'normal'}">${priorityLabels[a.priority || 'normal']}</span>
+            <div class="urgency-strip"></div>
+            <span class="priority-badge priority-${priority}">${priorityLabel}</span>
             <div class="assignment-actions">
-                <button class="action-btn btn-delete" onclick="event.stopPropagation(); deleteAssignment(${a.id}, this.closest('.assignment-cube'))" title="삭제"><i class="mdi mdi-trash-can-outline"></i></button>
+                <button class="action-btn btn-delete" onclick="event.stopPropagation(); deleteAssignment(${assignment.id}, this.closest('.assignment-cube'))" title="삭제">
+                    <i class="mdi mdi-trash-can-outline"></i>
+                </button>
             </div>
+            ${hasDescription ? '<i class="mdi mdi-text has-description-indicator" title="메모 있음"></i>' : ''}
+
             <div class="cube-content">
                 <div class="assignment-info">
-                    <div class="assignment-title">${a.title}</div>
-                    <div class="assignment-subject">${formatDate(a.deadline)}</div>
+                    <div class="assignment-title">${assignment.title}</div>
+                    <div class="assignment-subject">${formatDate(assignment.deadline)}</div>
                 </div>
+                
                 <div class="time-container">
                     <div class="time-info">
-                        <div class="time-remaining-large">${formatHoursRemainingShort(hours)}</div>
-                        <div class="time-label">${hours === null ? '' : (hours < 0 ? '기한 지남' : '남음')}</div>
+                        <div class="time-remaining-large">${formatHoursRemainingShort(hoursRemaining)}</div>
+                        <div class="time-label">${hoursRemaining === null ? '' : (hoursRemaining < 0 ? '지연' : '남음')}</div>
                     </div>
-                    <button class="move-btn" onclick="event.stopPropagation(); moveAssignment(${a.id}, '${status === 'todo' ? 'in_progress' : 'completed'}')" title="${nextAction}">
+                    <button class="move-btn" onclick="event.stopPropagation(); moveAssignment(${assignment.id}, '${nextStatus}')" title="${nextTitle}">
                         <i class="mdi ${nextIcon}"></i>
                     </button>
                 </div>
             </div>
         `;
+
+        // Add click handler to open edit modal
+        cube.addEventListener('click', () => openEditModal(assignment));
+
         return cube;
     }
 
-    function calculateHoursRemaining(d) {
-        if (!d) return null;
-        return (new Date(d) - new Date()) / (1000 * 60 * 60);
-    }
-
-    function formatHoursRemainingShort(h) {
-        if (h === null) return "기한 없음";
-        if (h < 0) return "지연";
-        if (h < 1) return Math.round(h * 60) + "분";
-        if (h < 24) return Math.floor(h) + "시간";
-        return Math.floor(h / 24) + "일";
-    }
-
-    function formatDate(d) {
-        if (!d) return '기한이 설정되지 않음';
-        const date = new Date(d);
-        return date.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' }) + ' ' + date.toLocaleTimeString('ko-KR', { hour: 'numeric', minute: '2-digit' });
-    }
-
-    function getUrgencyClass(h) {
-        if (h === null) return 'urgency-no-deadline';
-        if (h < 6) return 'urgency-critical';
-        if (h < 24) return 'urgency-urgent';
-        if (h < 48) return 'urgency-soon';
+    // Get urgency class based on hours remaining
+    function getUrgencyClass(hours) {
+        if (hours === null) return 'urgency-no-deadline';
+        if (hours < 0 || hours < 6) return 'urgency-critical';
+        if (hours < 24) return 'urgency-urgent';
+        if (hours < 48) return 'urgency-soon';
+        if (hours < 120) return 'urgency-approaching';
+        if (hours < 168) return 'urgency-upcoming';
+        if (hours < 336) return 'urgency-future';
         return 'urgency-far';
     }
 
+    // Update Kanban column counts
     function updateKanbanCounts() {
-        document.getElementById('todoCount').textContent = assignments.filter(a => a.status === 'todo' || !a.status).length;
-        document.getElementById('inProgressCount').textContent = assignments.filter(a => a.status === 'in_progress').length;
+        const todoCount = assignments.filter(a => a.status === 'todo' || !a.status).length;
+        const inProgressCount = assignments.filter(a => a.status === 'in_progress').length;
+        const completedCount = document.querySelectorAll('#completedColumn .completed-cube').length;
+
+        document.getElementById('todoCount').textContent = todoCount;
+        document.getElementById('inProgressCount').textContent = inProgressCount;
+        document.getElementById('completedCount').textContent = completedCount;
+        document.getElementById('pendingCount').textContent = todoCount + inProgressCount;
     }
 
-    async function moveAssignment(id, status) {
-        const response = await fetch(`/api/assignment/${id}/status/`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrf },
-            body: JSON.stringify({ status })
+    // Move assignment to different status
+    async function moveAssignment(assignmentId, newStatus) {
+        event.stopPropagation();
+        const assignment = assignments.find(a => a.id === assignmentId);
+        if (!assignment) return;
+
+        if (newStatus === 'completed') {
+            // Use existing complete function
+            const element = document.querySelector(`.assignment-cube[data-id="${assignmentId}"]`);
+            if (element) {
+                await completeAssignment(assignmentId, element);
+            }
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/assignment/${assignmentId}/status/`, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrf 
+                },
+                body: JSON.stringify({ status: newStatus })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                assignment.status = newStatus;
+                renderKanban();
+            }
+        } catch (error) {
+            console.error('Error updating status:', error);
+            // Update locally anyway for better UX
+            assignment.status = newStatus;
+            renderKanban();
+        }
+    }
+
+    // Setup drag and drop functionality
+    function setupDragAndDrop() {
+        const cubes = document.querySelectorAll('.assignment-cube');
+        const columns = document.querySelectorAll('.kanban-column-body');
+
+        cubes.forEach(cube => {
+            cube.addEventListener('dragstart', handleDragStart);
+            cube.addEventListener('dragend', handleDragEnd);
         });
-        if ((await response.json()).success) location.reload();
-    }
 
-    async function deleteAssignment(id) {
-        if (!confirm('과제를 삭제하시겠습니까?')) return;
-        const response = await fetch(`/api/assignment/delete/${id}/`, {
-            method: 'POST',
-            headers: { 'X-CSRFToken': csrf }
+        columns.forEach(column => {
+            column.addEventListener('dragover', handleDragOver);
+            column.addEventListener('dragleave', handleDragLeave);
+            column.addEventListener('drop', handleDrop);
         });
-        if ((await response.json()).success) location.reload();
     }
 
-    async function deleteCompletedAssignment(id) {
-        if (!confirm('완료된 과제 기록을 삭제하시겠습니까?')) return;
-        deleteAssignment(id);
+    let draggedElement = null;
+
+    function handleDragStart(e) {
+        draggedElement = this;
+        this.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', this.dataset.id);
     }
 
+    function handleDragEnd(e) {
+        this.classList.remove('dragging');
+        document.querySelectorAll('.kanban-column-body').forEach(col => {
+            col.classList.remove('drag-over');
+        });
+        draggedElement = null;
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        
+        // Don't allow dropping on completed column (use button instead)
+        if (this.dataset.status !== 'completed') {
+            this.classList.add('drag-over');
+        }
+    }
+
+    function handleDragLeave(e) {
+        this.classList.remove('drag-over');
+    }
+
+    function handleDrop(e) {
+        e.preventDefault();
+        this.classList.remove('drag-over');
+
+        const assignmentId = parseInt(e.dataTransfer.getData('text/plain'));
+        const newStatus = this.dataset.status;
+
+        if (newStatus === 'completed') return; // Don't allow drag to completed
+
+        moveAssignment(assignmentId, newStatus);
+    }
+
+    // Calculate urgency score (0-100) based on time remaining
+    function calculateUrgencyScore(hours) {
+        if (hours < 0) return 100; // Overdue is maximum urgency
+        if (hours < 6) return 95 + (6 - hours); // Critical: 95-101
+        if (hours < 24) return 80 + ((24 - hours) / 24) * 15; // Urgent: 80-95
+        if (hours < 48) return 65 + ((48 - hours) / 48) * 15; // Soon: 65-80
+        if (hours < 120) return 45 + ((120 - hours) / 120) * 20; // Approaching: 45-65
+        if (hours < 168) return 30 + ((168 - hours) / 168) * 15; // Upcoming: 30-45
+        if (hours < 336) return 15 + ((336 - hours) / 336) * 15; // Future: 15-30
+        return Math.max(0, 15 - (hours - 336) / 168); // Far: 0-15
+    }
+
+    // Calc functions
+    function calculateHoursRemaining(deadlineStr) {
+        if (!deadlineStr) return null; // Return null for no deadline
+        const deadline = new Date(deadlineStr);
+        const now = new Date();
+        const diff = deadline - now;
+        return diff / (1000 * 60 * 60); // Can be negative if overdue
+    }
+
+    function formatHoursRemainingShort(hours) {
+        if (hours === null) return "기한 없음";
+        if (hours < 0) return "지연";
+        if (hours < 1) {
+            const minutes = Math.round(hours * 60);
+            return `${minutes}분`;
+        } else if (hours < 24) {
+            const h = Math.floor(hours);
+            const m = Math.round((hours - h) * 60);
+            if (m > 0 && hours < 6) {
+                return `${h}시간 ${m}분`;
+            }
+            return `${h}시간`;
+        } else {
+            const days = Math.floor(hours / 24);
+            const remainingHours = Math.floor(hours % 24);
+            if (remainingHours > 0 && days < 3) {
+                return `${days}일 ${remainingHours}시간`;
+            }
+            return `${days}일`;
+        }
+    }
+
+    function formatDate(dateStr) {
+        if (!dateStr) return '기한 없음';
+        // Parse the ISO string and handle timezone
+        let date;
+        if (dateStr.includes('+') || dateStr.endsWith('Z')) {
+            // Already has timezone info - parse directly
+            date = new Date(dateStr);
+        } else {
+            // No timezone - treat as local time
+            date = new Date(dateStr);
+        }
+        
+        const now = new Date();
+        // Normalize dates to midnight for accurate day comparison (in local time)
+        const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        const nowOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const tomorrow = new Date(nowOnly);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+
+        // Format time in local timezone
+        const timeOptions = { hour: 'numeric', minute: '2-digit', hour12: true };
+        const timeStr = date.toLocaleTimeString('en-US', timeOptions);
+
+        // Check if today
+        if (dateOnly.getTime() === nowOnly.getTime()) {
+            return '오늘 ' + timeStr;
+        }
+        // Check if tomorrow
+        if (dateOnly.getTime() === tomorrow.getTime()) {
+            return '내일 ' + timeStr;
+        }
+
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' ' + timeStr;
+    }
+
+    // Real-time updates - refresh times every minute
+    function startRealtimeUpdates() {
+        setInterval(() => {
+            const cubes = document.querySelectorAll('.assignment-cube');
+            let needsRerender = false;
+
+            cubes.forEach(cube => {
+                const assignmentId = parseInt(cube.dataset.id);
+                const assignment = assignments.find(a => a.id === assignmentId);
+
+                if (assignment) {
+                    const hoursRemaining = calculateHoursRemaining(assignment.deadline);
+                    const oldHours = parseFloat(cube.dataset.hours);
+
+                    // Update time display
+                    const timeDisplay = cube.querySelector('.time-remaining-large');
+                    const timeLabel = cube.querySelector('.time-label');
+                    if (timeDisplay) {
+                        timeDisplay.textContent = formatHoursRemainingShort(hoursRemaining);
+                        timeLabel.textContent = hoursRemaining === null ? '' : (hoursRemaining < 0 ? '지연' : '남음');
+                    }
+
+                    // Check if urgency category changed (requires re-render for color change)
+                    if (crossedUrgencyThreshold(oldHours, hoursRemaining)) {
+                        needsRerender = true;
+                    }
+
+                    cube.dataset.hours = hoursRemaining;
+                }
+            });
+
+            // Re-render if any assignment crossed an urgency threshold
+            if (needsRerender) {
+                renderKanban();
+            }
+        }, 60000); // Update every minute
+    }
+
+    // Check if assignment crossed an urgency threshold requiring visual update
+    function crossedUrgencyThreshold(oldHours, newHours) {
+        const thresholds = [6, 24, 48, 120, 168, 336];
+        for (let threshold of thresholds) {
+            if ((oldHours >= threshold && newHours < threshold) ||
+                (oldHours < threshold && newHours >= threshold)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Update stats badges (simplified for Kanban)
+    function updateStatsCounts() {
+        updateKanbanCounts();
+    }
+
+    // Actions - NO CONFIRMATION
+    async function completeAssignment(assignmentId, element) {
+        event.stopPropagation();
+        try {
+            // Get assignment data before completing
+            const assignmentData = assignments.find(a => a.id === assignmentId);
+
+            // Visual feedback immediately
+            element.style.opacity = '0.5';
+
+            const response = await fetch(`/api/assignment/${assignmentId}/complete/`, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': csrf }
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                element.classList.add('completed');
+
+                setTimeout(() => {
+                    assignments = assignments.filter(a => a.id !== assignmentId);
+                    renderKanban();
+
+                    // Add to completed column dynamically
+                    if (completedColumn && assignmentData) {
+                        // Remove empty state if present
+                        const emptyState = document.getElementById('completedEmpty');
+                        if (emptyState) emptyState.remove();
+
+                        // Create the completed item element
+                        const itemDiv = document.createElement('div');
+                        itemDiv.className = 'completed-cube';
+                        itemDiv.dataset.id = assignmentId;
+
+                        // Format today's date
+                        const today = new Date();
+                        const formattedDate = today.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+                        itemDiv.innerHTML = `
+                            <button class="delete-btn" onclick="deleteCompletedAssignment(${assignmentId}, this)" title="삭제">
+                                <i class="mdi mdi-delete-outline"></i>
+                            </button>
+                            <div class="assignment-title">${assignmentData.title}</div>
+                            <div class="assignment-subject">${assignmentData.subject || 'General'}</div>
+                            <div class="completed-date">
+                                <i class="mdi mdi-check-circle"></i>
+                                <span>${formattedDate}</span>
+                            </div>
+                        `;
+
+                        // Insert at the beginning (after header, before see more btn)
+                        const seeMoreBtn = document.getElementById('seeMoreBtn');
+                        if (seeMoreBtn) {
+                            completedColumn.insertBefore(itemDiv, seeMoreBtn);
+                        } else {
+                            completedColumn.appendChild(itemDiv);
+                        }
+                        
+                        updateKanbanCounts();
+                    }
+                }, 400);
+            }
+        } catch (error) {
+            console.error(error);
+            element.style.opacity = '1'; // Revert on failure
+        }
+    }
+
+    async function deleteAssignment(assignmentId, element) {
+        event.stopPropagation();
+        
+        // Add confirmation dialog ONLY for regular delete
+        if (!confirm('정말로 삭제하시겠습니까?')) return;
+        
+        try {
+            element.style.opacity = '0.5';
+
+            const response = await fetch(`/api/assignment/delete/${assignmentId}/`, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': csrf }
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                element.style.transform = "scale(0.5)";
+                element.style.opacity = "0";
+
+                setTimeout(() => {
+                    assignments = assignments.filter(a => a.id !== assignmentId);
+                    renderKanban();
+                }, 300);
+            }
+        } catch (error) {
+            console.error(error);
+            element.style.opacity = '1';
+        }
+    }
+
+    // Delete completed assignment
+    async function deleteCompletedAssignment(assignmentId, buttonElement) {
+        event.stopPropagation();
+        
+        if (!confirm('정말로 삭제하시겠습니까?')) return;
+        
+        const itemElement = buttonElement.closest('.completed-cube');
+        if (!itemElement) return;
+
+        try {
+            itemElement.style.opacity = '0.5';
+
+            const response = await fetch(`/api/assignment/delete/${assignmentId}/`, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': csrf }
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                itemElement.style.transform = 'translateX(20px)';
+                itemElement.style.opacity = '0';
+
+                setTimeout(() => {
+                    itemElement.remove();
+                    updateKanbanCounts();
+
+                    // Check if completed column is now empty
+                    const remainingItems = document.querySelectorAll('#completedColumn .completed-cube');
+                    if (remainingItems.length === 0) {
+                        // Show empty state
+                        const emptyDiv = document.createElement('div');
+                        emptyDiv.className = 'kanban-empty';
+                        emptyDiv.id = 'completedEmpty';
+                        emptyDiv.innerHTML = `
+                            <i class="mdi mdi-checkbox-marked-circle-outline"></i>
+                            <p>완료된 과제가 아직 없습니다</p>
+                        `;
+                        const seeMoreBtn = document.getElementById('seeMoreBtn');
+                        if (seeMoreBtn) {
+                            completedColumn.insertBefore(emptyDiv, seeMoreBtn);
+                        } else {
+                            completedColumn.appendChild(emptyDiv);
+                        }
+                    }
+                }, 300);
+            }
+        } catch (error) {
+            console.error(error);
+            itemElement.style.opacity = '1';
+        }
+    }
+
+    // Modal Events
+    // Initial render
     renderKanban();
+    startRealtimeUpdates(); // Start real-time updates
+
+    // See More functionality for completed assignments
+    const seeMoreBtn = document.getElementById('seeMoreBtn');
+    let showingAll = false;
+
+    // Check if there are more than 5 completed assignments on page load
+    async function checkForMoreCompleted() {
+        if (!seeMoreBtn || !completedColumn) return;
+
+        try {
+            const response = await fetch("{% url 'get_all_completed_assignments' %}");
+            const data = await response.json();
+
+            if (data.success && data.completed.length > 5) {
+                seeMoreBtn.style.display = 'block';
+            }
+        } catch (error) {
+            console.error('Error checking completed assignments:', error);
+        }
+    }
+
+    // See More button click handler
+    if (seeMoreBtn) {
+        seeMoreBtn.addEventListener('click', async () => {
+            if (!showingAll) {
+                // Load and show all completed assignments
+                try {
+                    const response = await fetch("{% url 'get_all_completed_assignments' %}");
+                    const data = await response.json();
+
+                    if (data.success) {
+                        // Remove existing completed cubes
+                        const existingCubes = completedColumn.querySelectorAll('.completed-cube');
+                        existingCubes.forEach(cube => cube.remove());
+                        
+                        // Remove empty state if present
+                        const emptyState = document.getElementById('completedEmpty');
+                        if (emptyState) emptyState.remove();
+
+                        // Add all completed assignments
+                        data.completed.forEach(assignment => {
+                            const itemDiv = document.createElement('div');
+                            itemDiv.className = 'completed-cube';
+                            itemDiv.dataset.id = assignment.id;
+                            itemDiv.innerHTML = `
+                                <button class="delete-btn" onclick="deleteCompletedAssignment(${assignment.id}, this)" title="삭제">
+                                    <i class="mdi mdi-delete-outline"></i>
+                                </button>
+                                <div class="assignment-title">${assignment.title}</div>
+                                <div class="assignment-subject">${assignment.subject}</div>
+                                <div class="completed-date">
+                                    <i class="mdi mdi-check-circle"></i>
+                                    <span>${assignment.completed_at}</span>
+                                </div>
+                            `;
+                            completedColumn.insertBefore(itemDiv, seeMoreBtn);
+                        });
+
+                        seeMoreBtn.innerHTML = '<i class="mdi mdi-chevron-up"></i> 줄여 보기';
+                        showingAll = true;
+                        updateKanbanCounts();
+                    }
+                } catch (error) {
+                    console.error('Error loading completed assignments:', error);
+                }
+            } else {
+                // Show only first 5
+                location.reload(); // Simple way to reset to initial state
+            }
+        });
+    }
+
+    // Initialize on page load
+    const completedCubes = document.querySelectorAll('#completedColumn .completed-cube');
+    if (completedCubes.length > 0) {
+        checkForMoreCompleted();
+    }
 </script>
 {% endblock %}
