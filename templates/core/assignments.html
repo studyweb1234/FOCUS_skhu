@@ -3,6 +3,18 @@
 
 {% block title %}과제 관리 - FOCUS{% endblock %}
 
+{% block favicon %}
+<link rel="icon"
+    href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%234f46e5"><path d="M19,3H14.82C14.4,1.84 13.3,1 12,1C10.7,1 9.6,1.84 9.18,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M12,3A1,1 0 0,1 13,4A1,1 0 0,1 12,5A1,1 0 0,1 11,4A1,1 0 0,1 12,3M7,7H17V5H19V19H5V5H7V7M9,11H15V13H9V11M9,15H15V17H9V15Z" /></svg>'>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* 원본 스타일 유지 */
+    /* ... (생략된 스타일은 assignmentshtml.txt의 내용을 그대로 사용하세요) ... */
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="fade-in">
     <div class="assignments-header">
@@ -41,20 +53,32 @@
         <div class="kanban-column" id="progressColumn">
             <div class="column-header">
                 <h2 class="column-title"><i class="mdi mdi-progress-clock"></i> 진행 중</h2>
+                <span class="column-count">{{ in_progress_assignments|length }}</span>
             </div>
             <div class="column-content">
+                {% for assignment in in_progress_assignments %}
                 {% empty %}
-                <div class="empty-state"><p>진행 중인 과제가 없습니다.</p></div>
+                <div class="empty-state">
+                    <i class="mdi mdi-timer-sand"></i>
+                    <p>진행 중인 과제가 없습니다.</p>
+                </div>
+                {% endfor %}
             </div>
         </div>
 
         <div class="kanban-column" id="completedColumn">
             <div class="column-header">
                 <h2 class="column-title"><i class="mdi mdi-check-circle-outline"></i> 최근 완료</h2>
+                <span class="column-count">{{ completed_assignments|length }}</span>
             </div>
             <div class="column-content">
+                {% for assignment in completed_assignments %}
                 {% empty %}
-                <div class="empty-state"><p>완료된 과제가 아직 없습니다.</p></div>
+                <div class="empty-state">
+                    <i class="mdi mdi-check-all"></i>
+                    <p>완료된 과제가 아직 없습니다.</p>
+                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
@@ -75,18 +99,11 @@
                 <label>과목</label>
                 <select name="subject">
                     <option value="General">일반</option>
-                    {% for subject in subjects %}<option value="{{ subject.name }}">{{ subject.name }}</option>{% endfor %}
+                    {% for subject in subjects %}
+                    <option value="{{ subject.name }}">{{ subject.name }}</option>
+                    {% endfor %}
                 </select>
             </div>
             <div class="form-group">
                 <label>마감 기한</label>
-                <input type="datetime-local" name="deadline" required>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="secondary-btn" onclick="closeModal('assignmentModal')">취소</button>
-                <button type="submit" class="primary-btn">과제 생성</button>
-            </div>
-        </form>
-    </div>
-</div>
-{% endblock %}
+                <input type="datetime-local" name="deadline

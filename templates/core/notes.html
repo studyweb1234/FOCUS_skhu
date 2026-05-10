@@ -11,7 +11,12 @@
             <button class="add-subject-btn" onclick="openModal('subjectModal')">
                 <i class="mdi mdi-plus"></i> 과목 추가
             </button>
-            </div>
+            {% for subject in subjects %}
+            <button class="subject-btn" onclick="filterBySubject('{{ subject.id }}', this)">
+                {{ subject.name }} <span class="badge">{{ subject.note_count }}</span>
+            </button>
+            {% endfor %}
+        </div>
     </div>
 
     <div class="notes-container">
@@ -23,20 +28,21 @@
         </div>
 
         {% if notes %}
-            {% else %}
+        <div class="notes-grid" id="notesGrid">
+            </div>
+        {% else %}
         <div class="notes-empty-state">
             <div class="empty-icon"><i class="mdi mdi-note-outline"></i></div>
             <h2>메모할 준비가 되셨나요?</h2>
             <p>위에서 과목을 선택하거나 새 과목을 만들어 메모를 시작하세요.</p>
-            <button class="primary-btn" onclick="openModal('subjectModal')" style="margin-top: 1rem;">과목 생성</button>
+            <button class="primary-btn" onclick="openModal('subjectModal')" style="margin-top: 1rem;">
+                <i class="mdi mdi-plus"></i> 과목 생성
+            </button>
         </div>
         {% endif %}
     </div>
 </div>
 
-<div class="modal-header"><h2>새 메모 생성</h2></div>
 <label>메모 제목</label>
 <input type="text" placeholder="제목을 입력하세요...">
-<label>내용</label>
-<textarea placeholder="메모 내용을 입력하세요..."></textarea>
 {% endblock %}

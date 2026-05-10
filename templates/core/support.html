@@ -34,9 +34,18 @@
 
     <form class="chat-input-area" id="supportForm">
         <div class="message-type-selector">
-            <label class="type-btn"><input type="radio" name="message_type" value="feedback" checked> <span>피드백</span></label>
-            <label class="type-btn"><input type="radio" name="message_type" value="time_fix"> <span>시간 수정</span></label>
-            <label class="type-btn"><input type="radio" name="message_type" value="bug"> <span>버그 제보</span></label>
+            <label class="type-btn">
+                <input type="radio" name="message_type" value="feedback" checked>
+                <span>피드백</span>
+            </label>
+            <label class="type-btn">
+                <input type="radio" name="message_type" value="time_fix">
+                <span>시간 수정</span>
+            </label>
+            <label class="type-btn">
+                <input type="radio" name="message_type" value="bug">
+                <span>버그 제보</span>
+            </label>
         </div>
         <div class="input-wrapper">
             <textarea id="messageInput" placeholder="메시지를 입력하세요..." required></textarea>
