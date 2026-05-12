@@ -620,15 +620,10 @@
 
             <div class="card mb-4" id="weeklyActivityCard">
                 <div class="card-header">
-                    <h3 class="card-title" id="chartTitle"><i class="mdi mdi-chart-line" style="margin-right: 8px;"></i>
-                        주간 활동 기록</h3>
-                    
-                    <div
-                        style="background: var(--bg-secondary); padding: 2px; border-radius: 6px; border: 1px solid var(--border-color);">
-                        <button class="chart-toggle-btn active" id="btnWeekly"
-                            onclick="toggleChart('weekly')">주간</button>
-                        <button class="chart-toggle-btn" id="btnMonthly"
-                            onclick="toggleChart('monthly')">월간</button>
+                    <h3 class="card-title" id="chartTitle"><i class="mdi mdi-chart-line" style="margin-right: 8px;"></i> 주간 활동 기록</h3>
+                    <div style="background: var(--bg-secondary); padding: 2px; border-radius: 6px; border: 1px solid var(--border-color);">
+                        <button class="chart-toggle-btn active" id="btnWeekly" onclick="toggleChart('weekly')">주간</button>
+                        <button class="chart-toggle-btn" id="btnMonthly" onclick="toggleChart('monthly')">월간</button>
                     </div>
                 </div>
                 <div class="card-body" style="height: 280px;">
@@ -651,8 +646,7 @@
                         <div class="pie-legend" style="flex: 1;">
                             {% for item in subject_breakdown %}
                             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                                <div class="pie-color-{{ forloop.counter0 }}"
-                                    style="width: 12px; height: 12px; border-radius: 3px;"></div>
+                                <div class="pie-color-{{ forloop.counter0 }}" style="width: 12px; height: 12px; border-radius: 3px;"></div>
                                 <span style="font-size: 0.85rem; flex: 1;">{{ item.subject }}</span>
                                 <span style="font-size: 0.8rem; color: var(--text-secondary);">{{ item.hours }}시간 ({{ item.percentage }}%)</span>
                             </div>
@@ -669,16 +663,8 @@
                 <div class="card-header" style="display: flex; align-items: center; justify-content: space-between;">
                     <h3 class="card-title" style="margin: 0;"><i class="mdi mdi-notebook-multiple" style="margin-right: 8px;"></i>나의 과목</h3>
                     <div style="display: flex; align-items: center; gap: 8px;">
-                        <input type="text" id="newSubjectName" class="form-input"
-                            placeholder="과목 추가..." maxlength="100"
-                            style="padding: 6px 12px; font-size: 0.85rem; border: 1px solid var(--border-color);
-                                   border-radius: 20px; background: var(--bg-primary); width: 160px;"
-                            onkeypress="if(event.key === 'Enter') addSubject()">
-                        <button onclick="addSubject()" style="background: var(--primary-color); border: none; color: white;
-                                       width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
-                                       display: flex; align-items: center; justify-content: center;
-                                       font-size: 1.1rem; transition: opacity 0.2s;"
-                            onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'" title="과목 추가">
+                        <input type="text" id="newSubjectName" class="form-input" placeholder="과목 추가..." maxlength="100" style="padding: 6px 12px; font-size: 0.85rem; border: 1px solid var(--border-color); border-radius: 20px; background: var(--bg-primary); width: 160px;" onkeypress="if(event.key === 'Enter') addSubject()">
+                        <button onclick="addSubject()" style="background: var(--primary-color); border: none; color: white; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'" title="과목 추가">
                             <i class="mdi mdi-plus"></i>
                         </button>
                     </div>
@@ -686,16 +672,9 @@
                 <div class="card-body">
                     <div id="subjectsList" style="display: flex; flex-wrap: wrap; gap: 8px; min-height: 32px;">
                         {% for subject in subjects %}
-                        <div class="subject-tag" data-subject-id="{{ subject.id }}" 
-                             style="background: var(--bg-tertiary); padding: 6px 12px; border-radius: 20px;
-                                    border: 1px solid var(--border-color); font-size: 0.85rem;
-                                    display: inline-flex; align-items: center; gap: 6px;">
+                        <div class="subject-tag" data-subject-id="{{ subject.id }}" style="background: var(--bg-tertiary); padding: 6px 12px; border-radius: 20px; border: 1px solid var(--border-color); font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px;">
                             <span>{{ subject.name }}</span>
-                            <button onclick="deleteSubject({{ subject.id }}, '{{ subject.name|escapejs }}')"
-                                style="background: none; border: none; color: var(--text-tertiary); cursor: pointer;
-                                       padding: 0; line-height: 1; font-size: 0.9rem; display: flex;"
-                                onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='var(--text-tertiary)'"
-                                title="삭제">
+                            <button onclick="deleteSubject({{ subject.id }}, '{{ subject.name|escapejs }}')" style="background: none; border: none; color: var(--text-tertiary); cursor: pointer; padding: 0; line-height: 1; font-size: 0.9rem; display: flex;" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='var(--text-tertiary)'" title="삭제">
                                 <i class="mdi mdi-close-circle-outline"></i>
                             </button>
                         </div>
@@ -727,8 +706,7 @@
                             <div class="rank-badge rank-{{ forloop.counter }}">{{ forloop.counter }}</div>
                             <div class="user-info">{{ u.username }} {% if forloop.counter == 1 %}🥇{% elif forloop.counter == 2 %}🥈{% elif forloop.counter == 3 %}🥉{% endif %}</div>
                         </div>
-                        <div class="user-stat">{{ u.streak }}일 <i class="mdi mdi-fire" style="font-size: 0.8rem;"></i>
-                        </div>
+                        <div class="user-stat">{{ u.streak }}일 <i class="mdi mdi-fire" style="font-size: 0.8rem;"></i></div>
                     </div>
                     {% empty %}
                     <div class="text-tertiary" style="font-size: 0.85rem;">아직 활동 중인 기록이 없습니다.</div>
@@ -755,14 +733,13 @@
                     {% endif %}
                 </div>
             </div>
+            
             <div class="calendar-card">
                 <div class="calendar-header">
                     <div class="calendar-month-year" id="calendarMonthYear"></div>
                     <div style="display: flex; gap: 5px;">
-                        <button class="calendar-nav-btn" onclick="changeMonth(-1)"><i
-                                class="mdi mdi-chevron-left"></i></button>
-                        <button class="calendar-nav-btn" onclick="changeMonth(1)"><i
-                                class="mdi mdi-chevron-right"></i></button>
+                        <button class="calendar-nav-btn" onclick="changeMonth(-1)"><i class="mdi mdi-chevron-left"></i></button>
+                        <button class="calendar-nav-btn" onclick="changeMonth(1)"><i class="mdi mdi-chevron-right"></i></button>
                     </div>
                 </div>
                 <div class="calendar-days-header">
@@ -779,20 +756,16 @@
 
             <div class="schedule-card" id="todayCard">
                 <div class="schedule-header">
-                    <span><i class="mdi mdi-calendar-today" style="margin-right: 6px;"></i><span
-                            id="selectedDateLabel">오늘의 할 일</span></span>
-                    <span id="selectedDateCount"
-                        style="font-size: 0.75rem; color: var(--text-tertiary); font-weight: normal;"></span>
+                    <span><i class="mdi mdi-calendar-today" style="margin-right: 6px;"></i><span id="selectedDateLabel">오늘의 할 일</span></span>
+                    <span id="selectedDateCount" style="font-size: 0.75rem; color: var(--text-tertiary); font-weight: normal;"></span>
                 </div>
                 <div class="schedule-list" id="selectedDateList"></div>
             </div>
 
-
             <div class="schedule-card" style="margin-top: 0;" id="upcomingCard">
                 <div class="schedule-header">
                     <span><i class="mdi mdi-calendar-clock" style="margin-right: 6px;"></i>예정된 과제</span>
-                    <span id="upcomingCount"
-                        style="font-size: 0.75rem; color: var(--text-tertiary); font-weight: normal;"></span>
+                    <span id="upcomingCount" style="font-size: 0.75rem; color: var(--text-tertiary); font-weight: normal;"></span>
                 </div>
                 <div class="schedule-list" id="upcomingList"></div>
             </div>
@@ -809,10 +782,7 @@
                             <div class="ring-container">
                                 <svg class="ring-svg">
                                     <circle class="ring-circle-bg" cx="18" cy="18" r="16"></circle>
-                                    <circle class="ring-circle-progress" cx="18" cy="18" r="16" 
-                                            stroke="#64748b" 
-                                            stroke-dashoffset="100" 
-                                            style="stroke-dasharray: 100;"></circle>
+                                    <circle class="ring-circle-progress" cx="18" cy="18" r="16" stroke="#64748b" stroke-dashoffset="100" style="stroke-dasharray: 100;"></circle>
                                 </svg>
                                 <div class="ring-dot" style="background: #64748b;"></div>
                             </div>
@@ -844,16 +814,14 @@
             </button>
         </div>
         <div class="leaderboard-modal-body" id="leaderboardModalBody">
-            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
 
-
 {% block extra_js %}
 {% load static %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-
 <script src="{% static 'js/dashboard.js' %}"></script>
 
 <script type="text/javascript">
@@ -885,7 +853,9 @@
             }
         }
     });
+</script>
 
+<script type="text/javascript">
     // 1. [순위표 버튼 고장 완벽 해결] 한국어 텍스트와 충돌하지 않도록 함수 재정의
     window.toggleLeaderboard = function() {
         const streakBoard = document.getElementById('streakBoard');
@@ -931,12 +901,13 @@
         });
     });
 </script>
+
 <script type="text/javascript">
     async function addSubject() {
         var input = document.getElementById('newSubjectName');
         var name = input.value.trim();
         if (!name) { 
-            showNotification('과목 이름을 입력해 주세요.', 'error'); 
+            showNotification('과목 이름을 입력해 주세요.', 'error');
             return;
         }
         try {
@@ -962,7 +933,7 @@
                 showNotification(data.error || '과목 추가에 실패했습니다.', 'error');
             }
         } catch (error) { 
-            console.error(error); 
+            console.error(error);
             showNotification('오류가 발생했습니다.', 'error');
         }
     }
@@ -985,7 +956,7 @@
                 }
                 showNotification('과목이 삭제되었습니다.', 'success');
             } else { 
-                showNotification(data.error || '실패했습니다.', 'error'); 
+                showNotification(data.error || '실패했습니다.', 'error');
             }
         } catch (error) { 
             console.error(error);
@@ -998,13 +969,13 @@
         var n = document.createElement('div');
         n.style = 'position: fixed; top: 20px; right: 20px; padding: 12px 20px; border-radius: 8px; font-size: 0.9rem; font-weight: 500; z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.15);';
         if (type === 'success') { 
-            n.style.background = '#10b981'; 
+            n.style.background = '#10b981';
             n.style.color = 'white';
         } else if (type === 'error') { 
-            n.style.background = '#ef4444'; 
+            n.style.background = '#ef4444';
             n.style.color = 'white';
         } else { 
-            n.style.background = 'var(--bg-secondary)'; 
+            n.style.background = 'var(--bg-secondary)';
             n.style.color = 'var(--text-primary)';
         }
         n.textContent = message;

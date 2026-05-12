@@ -1507,3 +1507,38 @@ body.loaded {
     border-radius: 50%;
     animation: pulse 2s ease-in-out infinite;
 }
+.leaderboard-card {
+
+    background: #111;
+    border-radius: 20px;
+    padding: 20px;
+
+    margin-top: 20px;
+
+    border: 1px solid #7c4dff;
+}
+
+.leaderboard-header {
+
+    font-size: 24px;
+    font-weight: bold;
+
+    color: white;
+
+    margin-bottom: 20px;
+}
+
+.rank-item {
+
+    display: flex;
+    justify-content: space-between;
+
+    padding: 15px;
+    margin-top: 10px;
+
+    background: #1b1b1b;
+
+    border-radius: 14px;
+
+    color: white;
+}
